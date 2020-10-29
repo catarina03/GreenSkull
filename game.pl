@@ -24,5 +24,5 @@ play(Player):-
 %see if we can have more moves (TO DO!)
 %isOver(GameState).
 
-%defines next player conform who has the greenSkull
+%defines next player conform who has the greenSkull (TO DO)
 set_next_player(Player,NextPlayer)
