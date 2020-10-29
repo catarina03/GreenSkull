@@ -41,3 +41,6 @@ print_row([H|T]):-
 %prints column numbers
 display_columns:-
     write('        1   2   3   4   5   6   7   8   9   10').
+    
+ %display game over message
+ display_game_over:- write('                 GAME OVER').
