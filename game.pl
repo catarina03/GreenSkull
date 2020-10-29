@@ -1,6 +1,6 @@
 :-include('display.pl').
 
-play :- 
+play:- 
     initialBoard(GameState),
     initialPlayer(Player),
-    display_game(GameState,Player)​.
+    display_game(GameState,Player).

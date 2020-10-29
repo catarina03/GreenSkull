@@ -3,16 +3,22 @@
 % o -> Orc -> brancos
 % 0 -> Empty space
 
-display_game(GameState,Player)​:round(Player),print_board(GameState,0).
+display_game(GameState,Player):-round(Player),print_board(GameState,0),nl.
 
-round(Player):- Player=orc,nl, write('TURN TO PLAY, ORC!'),nl.
-round(Player):- Player=globin, nl, write('TURN TO PLAY, Globin!'),nl.
-
+round(Player):- 
+    Player='orc',
+    nl, write('      TURN TO PLAY, ORC!'),nl,nl.
+round(Player):- 
+    Player='globin', 
+    nl, write('      TURN TO PLAY, Globin!'),nl,nl.
+round(Player):-
+    Player='zombies',
+    nl, write('      TURN TO PLAY, Zombies!'),nl,nl.
 
 initialPlayer(orc).
 
 % Inits the board
-initialBoard([ 
+initialBoard([        
              [0],         
             [0,0],         
            [z,0,z],        
@@ -43,6 +49,7 @@ print_row([H|T]):-
     print_row(T).
 
 %replaces number with string with number spaces
+
 space(0,'             ').
 space(1,'            ').
 space(2,'           ').
@@ -61,4 +68,3 @@ code(0,' ').
 code(z,'Z').
 code(g,'G').
 code(o,'O').
-
