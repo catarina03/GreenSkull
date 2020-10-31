@@ -6,22 +6,32 @@
 % 0 -> Empty space
 
 
-initial(GameState):- initialBoard(GameState).
-
-display_game(GameState, Player) :-
+% Display current state of the game
+% GameState - current state of the board
+% Player - who plays this turn
+% GreenSkull - who has the Green Skull
+display_game(GameState, Player, GreenSkull) :-
     nl,nl,print_board(GameState,0),
-    display_column_numbers, nl,
-    round(Player).
+    display_column_numbers,
+    display_green_skull(GreenSkull), 
+    display_player_turn(Player),
+    nl, nl.
 
-% display players turn
-round(o):- 
-    nl, write('                 TURN TO PLAY, ORC!'),nl,nl.
-round(g):-  
-    nl, write('                 TURN TO PLAY, Globin!'),nl,nl.
-round(z):-
-    nl, write('                 TURN TO PLAY, Zombies!'),nl,nl.
+% Display who plays this round
+display_player_turn(o):- 
+    nl, write('                 TURN TO PLAY, ORCS!').
+display_player_turn(g):-  
+    nl, write('                TURN TO PLAY, GOBLIN!').
+display_player_turn(z):-
+    nl, write('                TURN TO PLAY, ZOMBIES!').
 
-%prints the full board
+% Display who has the Green Skull
+display_green_skull(o) :-
+    nl, write('              ORCS HAVE THE GREEN SKULL!').
+display_green_skull(g) :-
+    nl, write('             GOBLINS HAVE THE GREEN SKULL!').
+
+% Prints the full board
 print_board([],N).
 print_board([H|T],N) :-
     space(N,S),write(S),
@@ -30,7 +40,7 @@ print_board([H|T],N) :-
     nl,nl,
     print_board(T,N1).
     
-%prints a single row
+% Prints a single row
 print_row([]).
 print_row([H|T]):-
     code(H,P),   
@@ -38,9 +48,11 @@ print_row([H|T]):-
     write('|'),
     print_row(T).
 
-%prints column numbers
+% Prints column numbers
 display_column_numbers:-
-    write('        1   2   3   4   5   6   7   8   9   10').
+    write('        1   2   3   4   5   6   7   8   9   10'),
+    nl.
     
-%display game over message
-display_game_over:- write('                 GAME OVER').
+% Displays game over message
+display_game_over :- 
+    write('                 GAME OVER').

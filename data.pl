@@ -3,12 +3,12 @@
 % o -> Orc -> brancos
 % 0 -> Empty space
 
-%players
+% Players
 player(o).
 player(g).
 player(z).
 
-%replaces number with string with spaces and row number.
+% Replaces number with string with spaces and row number.
 space(0,' 1                      ').
 space(1,' 2                    ').
 space(2,' 3                  ').
@@ -21,7 +21,7 @@ space(8,' 9      ').
 space(9,'10    ').
 
 
-% replaces symbols with characters for easier display
+% Replaces symbols with characters for easier display
 code(0,'   ').
 code(z,' Z ').
 code(g,' G ').
@@ -29,7 +29,7 @@ code(o,' O ').
 
 
 % Inits the board
-initialBoard([        
+initialBoard([       
              [0],         
             [0,0],         
            [z,0,z],        
@@ -41,7 +41,37 @@ initialBoard([
      [g,g,g,0,0,0,o,o,o],   
     [g,g,g,g,0,0,o,o,o,o] ]).
 
+% Intermediate Board
+intermediateBoard([
+             [0],
+            [0,0],
+           [z,0,0],
+          [0,0,0,0],
+         [0,z,z,0,0],
+        [0,0,z,z,0,o],
+       [g,0,0,0,0,0,0],
+      [g,0,0,0,0,0,0,o],
+     [g,g,0,0,0,z,0,0,o],
+    [g,g,0,0,g,0,0,o,o,o] ]).
+
+% Final Board
+finalBoard([
+             [0],
+            [0,0],
+           [0,0,g],
+          [0,0,0,g],
+         [0,0,0,0,g],
+        [0,0,0,0,0,g],
+       [o,0,0,0,0,0,g],
+      [o,0,0,0,0,0,g,0],
+     [o,0,0,0,0,0,0,0,g],
+    [o,0,0,0,0,0,0,0,0,0] ]).
+
+% The orcs start playing first
 initialPlayer(o).
 	
-%globin has the greenSkull first
+% The globins have the Green Skull
 greenSkull(g).
+
+% The orcs have the Green Skull
+greenSkull(o).

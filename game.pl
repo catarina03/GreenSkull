@@ -1,35 +1,32 @@
 :-include('display.pl').
 :-include('inputPlay.pl').
 
-start_game:- 
-    initial(GameState),
+% Starts the game
+play :- 
+    initialBoard(GameState),
     initialPlayer(o),
-    display_game(GameState,o),
-    input_play(GameState, X), 
-    play(Gamestate, o).
+    greenSkull(g),
+    play_round(GameState, o, g).
 
-% play moves
-play(Gamestate, Player):- 
-    display_game(GameState, Player),
+% Plays one round of game
+play_round(GameState, Player, GreenSkull):- 
+    display_game(GameState, Player, GreenSkull),
     input_play(GameState, X),
-
     set_next_player(Player, NextPlayer),
-    not(isOver(GameState)),!,
-    play(Gamestate, NextPlayer).
+    \+ isOver(GameState),!,
+    play_round(GameState, NextPlayer, GreenSkull).
 
-% displays a message when the game ends.
+% Displays a message when the game ends.
+/*
 play(Player):-
     isOver(GameState),!,
     display_game_over.
+    */
 
-% see if we can have more moves (TO DO!)
-% isOver(GameState).
+% Checks if game is over (placeholder)
 isOver(GameState) :- false.
 
-% defines next player conform who has the greenSkull (TO DO)
-% set_next_player(Player,NextPlayer)
-set_next_player(o, NextPlayer) :-
-    NextPlayer is g.
-
-set_next_player(g, NextPlayer) :-
-    NextPlayer is o.
+% Defines the next player according to who played before
+% set_next_player(Player, NextPlayer)
+set_next_player(o, g).
+set_next_player(g, o).
