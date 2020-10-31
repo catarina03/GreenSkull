@@ -10,7 +10,7 @@
 % GameState - current state of the board
 % Player - who plays this turn
 % GreenSkull - who has the Green Skull
-display_game(GameState, Player, GreenSkull) :-
+display_game(GameState-GreenSkull, Player) :-
     nl,nl,print_board(GameState,0),
     display_column_numbers,
     display_green_skull(GreenSkull), 
