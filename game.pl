@@ -3,7 +3,7 @@
 
 % Starts the game
 play :- 
-    initialBoard(GameState),
+    finalBoard(GameState),
     initialPlayer(o),
     greenSkull(g),
     play_round(GameState, o, g).

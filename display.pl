@@ -55,4 +55,5 @@ display_column_numbers:-
     
 % Displays game over message
 display_game_over :- 
-    write('                 GAME OVER').
+    nl, 
+    write('                       GAME OVER').
