@@ -41,6 +41,23 @@ Os zombies pontuam da mesma maneira. A espécie que tiver mais pontos ganha, mes
 
 ## Representação interna do estado do jogo:
 <!--indicação de como representam o estado do jogo, incluindo tabuleiro (tipicamente usando uma lista de listas com diferentes átomos para as peças), jogador atual, e eventualmente peças capturadas ou ainda por jogar, ou outras informações que possam ser necessárias (dependendo do jogo). Deve incluir exemplos da representação, em Prolog, de estados de jogo inicial, intermédio e final (que deverão estar também no ficheiro de código-ver abaixo), e indicação do significado de cada átomo (ex., como representam as diferentes peças)-->
+A representação de cada especie é feita da seguinte maneira:
+* Globins com a letra G;
+* Orcs com a letra O;
+* Zombies com a letra Z.
+
+**Estado inicial do jogo:**<br/>
+<img src="./images/initalBoard.png" alt="initial board" width="300" height="300"/> 
+<img src="./images/initialBoardSicstus.png" alt="initial board in console" width="300" height="300"/> 
+
+**Estado intermédio do jogo:**<br/>
+<img src="./images/intermediateBoard.png" alt="intermediate board" width="300" height="300"/> 
+<img src="./images/intertermediateBoardSicstus.png" alt="intermediate board in console" width="300" height="300"/>
+
+**Estado final do jogo:**<br/>
+(Vítoria dos Globins)<br/>
+<img src="./images/finalBoard.png" alt="final board" width="300" height="300"/> 
+<img src="./images/finalBoardSicstus.png" alt="final board in console" width="300" height="300"/>
 
 ## Visualização do estado de jogo:
 <!-- pequena descrição da implementação do predicado de visualização do estado de jogo (até 200 palavras)-->
