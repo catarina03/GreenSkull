@@ -3,17 +3,20 @@
 
 % Starts the game
 play :- 
-    finalBoard(GameState),
-    initialPlayer(o),
-    greenSkull(g),
-    play_round(GameState, o, g).
+    initial(GameState, Player, GreenSkull),
+    play_round(GameState, Player, GreenSkull).
 
+initial(GameState, Player, GreenSkull) :-
+    initial_board(GameState),
+    initial_player(Player),
+    initial_green_skull(GreenSkull).
+   
 % Plays one round of game
 play_round(GameState, Player, GreenSkull):- 
     display_game(GameState, Player, GreenSkull),
     input_play(GameState, X),
     set_next_player(Player, NextPlayer),
-    \+ isOver(GameState),!,
+    \+ is_over(GameState),!,
     play_round(GameState, NextPlayer, GreenSkull).
 
 % Displays a message when the game ends.
@@ -24,7 +27,7 @@ play(Player):-
     */
 
 % Checks if game is over (placeholder)
-isOver(GameState) :- false.
+is_over(GameState) :- false.
 
 % Defines the next player according to who played before
 % set_next_player(Player, NextPlayer)

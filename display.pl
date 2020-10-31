@@ -21,7 +21,7 @@ display_game(GameState, Player, GreenSkull) :-
 display_player_turn(o):- 
     nl, write('                 TURN TO PLAY, ORCS!').
 display_player_turn(g):-  
-    nl, write('                TURN TO PLAY, GOBLIN!').
+    nl, write('                TURN TO PLAY, GOBLINS!').
 display_player_turn(z):-
     nl, write('                TURN TO PLAY, ZOMBIES!').
 

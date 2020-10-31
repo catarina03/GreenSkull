@@ -29,7 +29,7 @@ code(o,' O ').
 
 
 % Inits the board
-initialBoard([       
+initial_board([       
              [0],         
             [0,0],         
            [z,0,z],        
@@ -42,7 +42,7 @@ initialBoard([
     [g,g,g,g,0,0,o,o,o,o] ]).
 
 % Intermediate Board
-intermediateBoard([
+intermediate_board([
              [0],
             [0,0],
            [z,0,0],
@@ -55,7 +55,7 @@ intermediateBoard([
     [g,g,0,0,g,0,0,o,o,o] ]).
 
 % Final Board
-finalBoard([
+final_board([
              [0],
             [0,0],
            [0,0,g],
@@ -68,10 +68,8 @@ finalBoard([
     [o,0,0,0,0,0,0,0,0,0] ]).
 
 % The orcs start playing first
-initialPlayer(o).
+initial_player(o).
 	
-% The globins have the Green Skull
-greenSkull(g).
+% The globins start with the Green Skull
+initial_green_skull(g).
 
-% The orcs have the Green Skull
-greenSkull(o).
