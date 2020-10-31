@@ -4,9 +4,9 @@
 % 0 -> Empty space
 
 %players
-player(orc).
-player(globin).
-player(zombies).
+player(o).
+player(g).
+player(z).
 
 %replaces number with string with spaces and row number.
 space(0,' 1                      ').
@@ -41,7 +41,7 @@ initialBoard([
      [g,g,g,0,0,0,o,o,o],   
     [g,g,g,g,0,0,o,o,o,o] ]).
 
-initialPlayer(orc).
-
+initialPlayer(o).
+	
 %globin has the greenSkull first
-greenSkull(globin).
+greenSkull(g).
