@@ -1,19 +1,23 @@
 :-include('display.pl').
-:-include('inputPlay.pl').
+:-include('moves.pl').
 
 % Starts the game
 play :- 
-    initial(GameState, GreenSkull),
-    play_round(GameState, o, GreenSkull).
+    initial(GameState-Player-GreenSkull),
+    play_round(GameState, Player, GreenSkull).
 
-initial(GameState, GreenSkull) :-
+
+% Initializes the game
+initial(GameState-Player-GreenSkull) :-
     initial_board(GameState),
+    initial_player(Player),
     initial_green_skull(GreenSkull).
+   
    
 % Plays one round of game
 play_round(GameState, Player, GreenSkull):- 
-    display_game(GameState, Player, GreenSkull),
-    input_play(GameState, X),
+    display_game(GameState-GreenSkull,Player),
+    move(GameState,Player,NewGameState),
     set_next_player(Player, NextPlayer),
     \+ is_over(GameState),!,
     play_round(GameState, NextPlayer, GreenSkull).

@@ -3,7 +3,9 @@
 ## Identificação:
 * **Grupo**: Green Skull 4
 * **Turma prática**: 6
-* **Elementos**: Catarina Fernandes (up201806610), Jessica Nascimento (up201806723)
+* **Elementos**: 
+    - Catarina Justo dos Santos Fernandes (up201806610)
+    - Jéssica Mireie Fernandes Nascimento (up201806723)
 
 ## Descrição do jogo:
 
@@ -40,24 +42,35 @@ Os zombies pontuam da mesma maneira. A espécie que tiver mais pontos ganha, mes
 * [Livro de regras](https://nestorgames.com/rulebooks/GREENSKULL_EN.pdf)
 
 ## Representação interna do estado do jogo:
-<!--indicação de como representam o estado do jogo, incluindo tabuleiro (tipicamente usando uma lista de listas com diferentes átomos para as peças), jogador atual, e eventualmente peças capturadas ou ainda por jogar, ou outras informações que possam ser necessárias (dependendo do jogo). Deve incluir exemplos da representação, em Prolog, de estados de jogo inicial, intermédio e final (que deverão estar também no ficheiro de código-ver abaixo), e indicação do significado de cada átomo (ex., como representam as diferentes peças)-->
+Escolhemos representar o estado do jogo através de um predicado composto por 3 elementos, GameState (que representa o estado atual do tabuleiro), Player (que reprenta o jogador que pode jogar naquela ronda) e GreenSkull (que representa o jogador que, naquele momento, tem a Green Skull em sua posse).  
+
+**GameState** é uma lista de listas com diferentes átomos para as peças, codificadas para representar as diferentes espécies.  
+
+![](images/representation.png)  
 A representação de cada especie é feita da seguinte maneira:
 * Globins com a letra G;
 * Orcs com a letra O;
 * Zombies com a letra Z.
 
-**Estado inicial do jogo:**<br/>
+**Player** e **GreenSkull** são representados por um átomo que pode ser **g** ou **o**.  
+
+## Visualização do estado de jogo:
+O predicado de visualização do estado do jogo é **display_game** e recebe dois argumentos, um argumento composto **GameState-GreenSkull** e um argumento **Player**.  
+O predicado começa por chamar o predicado **print_board**, que escreve na consola o tabuleiro, linha a linha (predicado **print_row**) com a respetiva numeração da linha e formatação (predicado **space**).  
+Depois imprime a númeração das colunas (predicado **display_column_numbers**) e de quem é a vez de jogar, juntamente com quem tem a Green Skull (predicados **display_green_skull** e **display_player_turn** respetivamente).
+
+### **Estado inicial do jogo:**  
+
 <img src="./images/initalBoard.png" alt="initial board" width="300" height="300"/> 
 <img src="./images/initialBoardSicstus.png" alt="initial board in console" width="300" height="300"/> 
 
-**Estado intermédio do jogo:**<br/>
-<img src="./images/intermediateBoard.png" alt="intermediate board" width="300" height="300"/> 
-<img src="./images/intertermediateBoardSicstus.png" alt="intermediate board in console" width="300" height="300"/>
+### **Estado intermédio do jogo:**  
 
-**Estado final do jogo:**<br/>
-(Vítoria dos Globins)<br/>
+<img src="./images/intermediateBoard.png" alt="intermediate board" width="300" height="300"/> 
+<img src="./images/intertermediateBoardSicstus.png" alt="intermediate board in console" width="300" height="300"/>  
+
+### **Estado final do jogo:**  
+
+(Vítoria dos Globins)  
 <img src="./images/finalBoard.png" alt="final board" width="300" height="300"/> 
 <img src="./images/finalBoardSicstus.png" alt="final board in console" width="300" height="300"/>
-
-## Visualização do estado de jogo:
-<!-- pequena descrição da implementação do predicado de visualização do estado de jogo (até 200 palavras)-->
