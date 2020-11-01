@@ -3,12 +3,11 @@
 
 % Starts the game
 play :- 
-    initial(GameState, Player, GreenSkull),
-    play_round(GameState, Player, GreenSkull).
+    initial(GameState, GreenSkull),
+    play_round(GameState, o, GreenSkull).
 
-initial(GameState, Player, GreenSkull) :-
+initial(GameState, GreenSkull) :-
     initial_board(GameState),
-    initial_player(Player),
     initial_green_skull(GreenSkull).
    
 % Plays one round of game
