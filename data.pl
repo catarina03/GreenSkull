@@ -1,7 +1,7 @@
 % z -> Zombies -> verdes
 % g -> Globin -> roxos
 % o -> Orc -> brancos
-% 0 -> Empty space
+% e -> Empty space
 
 % Players
 player(o).
@@ -49,7 +49,7 @@ initial_board([
           [z,e,e,z],         
          [e,e,z,e,e],         
         [e,e,z,z,e,e],             
-       [g,e,e,z,e,e,o],       
+       [g,e,e,z,e,z,o],       
       [g,g,e,e,e,e,o,o],        
      [g,g,g,e,e,e,o,o,o],   
     [g,g,g,g,e,e,o,o,o,o] ]).
