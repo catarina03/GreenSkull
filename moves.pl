@@ -122,9 +122,6 @@ change_board(RowPiece,ColumnPiece, Row, Column, GameState,NewGameState) :-
     write(NewGameState).
 
 
-
-
-
 change_board(RowPiece,ColumnPiece, Row, Column, GameState,NewGameState) :-
     % Value of place piece is jumping from - start
     nth1(RowPiece,GameState,ResultRowStart),
@@ -148,20 +145,85 @@ change_board(RowPiece,ColumnPiece, Row, Column, GameState,NewGameState) :-
     write('Game State: '), nl,
     write(NewGameState).
 
+
+% Falta incrementar a pontuação
+change_board(RowPiece, ColumnPiece, Row, Column, RowFood, ColumnFood, GameState, NewGameState) :-
+    % Value of place piece is jumping from - start
+    nth1(RowPiece,GameState,ResultRowStart),
+    nth1(ColumnPiece,ResultRowStart,ElemStart),
+    write('Start piece: '), write(ElemStart), nl,
+    % Value of food piece 
+    nth1(RowFood,GameState,ResultRowFood),
+    nth1(ColumnFood, ResultRowFood,ElemFood),
+    write('Food piece: '), write(ElemFood), nl,
+    % Value of place piece is jumping to - end
+    nth1(Row,GameState,ResultRowEnd),
+    nth1(Column, ResultRowEnd,ElemEnd),
+    write('End piece: '), write(ElemEnd), nl,
+    % Switching places
+    % Putting end element in starting place
+    ResultRowStart == ResultRowEnd, !,
+    replace(ResultRowStart, ColumnPiece, ElemEnd, IntermidiateRow),
+    replace(GameState, RowPiece, IntermidiateRow, IntermidiateGameState),
+    write('Replace: '), write(ResultRowStart), write(' with '), write(IntermidiateRow), nl,
+    write('Game State: '), nl,
+    write(IntermidiateGameState), nl, nl,
+    % Replacing food element with empty space
+    replace(IntermidiateRow, ColumnFood, e, FoodRow),
+    replace(IntermidiateGameState, RowFood, FoodRow, FoodGameState),
+    write('Replace: '), write(IntermidiateRow), write(' with '), write(FoodRow), nl,
+    write('Game State: '), nl,
+    write(FoodGameState),
+    % Putting end element in end place
+    replace(FoodRow, Column, ElemStart, FinalRow),
+    replace(FoodGameState, Row, FinalRow, NewGameState),
+    write('Replace: '), write(IntermidiateRow), write(' with '), write(FinalRow), nl,
+    write('Game State: '), nl,
+    write(NewGameState).
+
+
+% Falta incrementar a pontuação
+change_board(RowPiece, ColumnPiece, Row, Column, RowFood, ColumnFood, GameState, NewGameState) :-
+    % Value of place piece is jumping from - start
+    nth1(RowPiece,GameState,ResultRowStart),
+    nth1(ColumnPiece,ResultRowStart,ElemStart),
+    write('Start piece: '), write(ElemStart), nl,
+    % Value of food piece 
+    nth1(RowFood,GameState,ResultRowFood),
+    nth1(ColumnFood, ResultRowFood,ElemFood),
+    write('Food piece: '), write(ElemFood), nl,
+    % Value of place piece is jumping to - end
+    nth1(Row,GameState,ResultRowEnd),
+    nth1(Column, ResultRowEnd,ElemEnd),
+    write('End piece: '), write(ElemEnd), nl,
+    % Switching places
+    % Putting end element in starting place
+    replace(ResultRowStart, ColumnPiece, ElemEnd, FinalRowStart),
+    replace(GameState, RowPiece, FinalRowStart, IntermidiateGameState),
+    write('Replace: '), write(ResultRowStart), write(' with '), write(FinalRowStart), nl,
+    write('Game State: '), nl,
+    write(IntermidiateGameState), nl, nl,
+    % Putting space in food element
+    replace(ResultRowFood, ColumnFood, e, FinalRowFood),
+    replace(IntermidiateGameState, RowFood, FinalRowFood, FoodGameState),
+    write('Replace: '), write(ResultRowFood), write(' with '), write(FinalRowFood), nl,
+    write('Game State: '), nl,
+    write(FoodGameState), nl, nl,
+    % Putting end element in end place
+    replace(ResultRowEnd, Column, ElemStart, FinalRowEnd),
+    replace(FoodGameState, Row, FinalRowEnd, NewGameState),
+    write('Replace: '), write(ResultRowEnd), write(' with '), write(FinalRowEnd), nl,
+    write('Game State: '), nl,
+    write(NewGameState).
+
+
+
 /*
-
-% change elements from (RowPiece,ColumnPiece) para (Row, Column) 
-change_board(RowPiece, ColumnPiece, Row, Column, GameState,NewGameState) :-
-    write('Changes board!'), nl, 
-    write('From [r/c]: '), write(RowPiece), write('/'), write(ColumnPiece), nl,
-    write('To [r/c]: '), write(Row), write('/'), write(Column).
-
-
-    */
-
 % change elements from (RowPiece,ColumnPiece) para (Row, Column) 
 change_board(RowPiece, ColumnPiece, Row, Column, RowFood, ColumnFood, GameState, NewGameState) :-
     write('Changes board!'), nl, 
     write('From [r/c]: '), write(RowPiece), write('/'), write(ColumnPiece), nl,
     write('To [r/c]: '), write(Row), write('/'), write(Column), nl,
     write('And eats [r/c]: '), write(RowFood), write('/'), write(ColumnFood). 
+
+    */
