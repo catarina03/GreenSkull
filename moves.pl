@@ -11,6 +11,7 @@ input_play(Message,Row,Column) :-
 move(GameState,Player,NewGameState):- 
     choose_piece(GameState,Player,RowPiece,ColumnPiece),
     choose_move(Player,GameState,RowPiece,ColumnPiece,NewGameState).
+    
 
 % Choose piece you want to move and sees if is valid-------------------------------------
 choose_piece(GameState,Player,Row,Column):-
@@ -26,7 +27,7 @@ validPiece(GameState,o,Row,Column) :-
     Elem==o.
 
 validPiece(GameState,g,Row,Column) :- 
-    nth1(Row,GameSatate,L),
+    nth1(Row,GameState,L),
     nth1(Column,L,Elem),
     Elem==g.
 
@@ -52,19 +53,22 @@ valid_move(Player, RowPiece, ColumnPiece, Row, Column, GameState, NewGameState):
     nth1(Column,L,Elem),
     Elem==e,
     R is abs(RowPiece-Row),
-    C is abs(ColumnPiece-Column),
-    R=<2,C=<2,
+    C is abs(ColumnPiece-Column), 
+    R=<2,C=<2, 
     check_surroundings(RowPiece, ColumnPiece, Row, Column, GameState, NewGameState).
 
 % 
 check_adjacent_movement(RowPiece, ColumnPiece, Row, Column) :-
-    RowPiece = Row,  1 >= abs(ColumnPiece - Column).
+    RowPiece == Row,  
+    1 =< abs(ColumnPiece - Column).
 
 check_adjacent_movement(RowPiece, ColumnPiece, Row, Column) :-
-    RowPiece > Row,  ColumnPiece >= Column).
+    RowPiece > Row,  
+    ColumnPiece >= Column.
 
 check_adjacent_movement(RowPiece, ColumnPiece, Row, Column) :-
-    RowPiece < Row,  ColumnPiece <= Column).
+    RowPiece < Row,  
+    ColumnPiece =< Column.
 
 % 7, 4
 % 7,5;  6,4;  6,3;  7,3;  8,4;  8,5
@@ -74,7 +78,7 @@ check_adjacent_movement(RowPiece, ColumnPiece, Row, Column) :-
 check_surroundings(RowPiece, ColumnPiece, Row, Column, GameState, NewGameState):-
     R is abs(RowPiece-Row),
     C is abs(ColumnPiece-Column),
-    R=<1, C=<1, !,
+    R=<1, C=<1,
     check_adjacent_movement(RowPiece, ColumnPiece, Row, Column),
     change_board(RowPiece,ColumnPiece, Row, Column, GameState,NewGameState).
 
@@ -92,11 +96,68 @@ check_surroundings(RowPiece, ColumnPiece, Row, Column, GameState, NewGameState):
 
 
 %----------------------------------------------------------------------------------------
+
+change_board(RowPiece,ColumnPiece, Row, Column, GameState,NewGameState) :-
+    % Value of place piece is jumping from - start
+    nth1(RowPiece,GameState,ResultRowStart),
+    nth1(ColumnPiece,ResultRowStart,ElemStart),
+    write('Start piece: '), write(ElemStart), nl,
+    % Value of place piece is jumping to - end
+    nth1(Row,GameState,ResultRowEnd),
+    nth1(Column, ResultRowEnd,ElemEnd),
+    write('End piece: '), write(ElemEnd), nl,
+    % Switching places
+    % Putting end element in starting place
+    ResultRowStart == ResultRowEnd, !,
+    replace(ResultRowStart, ColumnPiece, ElemEnd, IntermidiateRow),
+    replace(GameState, RowPiece, IntermidiateRow, IntermidiateGameState),
+    write('Replace: '), write(ResultRowStart), write(' with '), write(IntermidiateRow), nl,
+    write('Game State: '), nl,
+    write(IntermidiateGameState), nl, nl,
+    % Putting end element in end place
+    replace(IntermidiateRow, Column, ElemStart, FinalRow),
+    replace(IntermidiateGameState, Row, FinalRow, NewGameState),
+    write('Replace: '), write(IntermidiateRow), write(' with '), write(FinalRow), nl,
+    write('Game State: '), nl,
+    write(NewGameState).
+
+
+
+
+
+change_board(RowPiece,ColumnPiece, Row, Column, GameState,NewGameState) :-
+    % Value of place piece is jumping from - start
+    nth1(RowPiece,GameState,ResultRowStart),
+    nth1(ColumnPiece,ResultRowStart,ElemStart),
+    write('Start piece: '), write(ElemStart), nl,
+    % Value of place piece is jumping to - end
+    nth1(Row,GameState,ResultRowEnd),
+    nth1(Column, ResultRowEnd,ElemEnd),
+    write('End piece: '), write(ElemEnd), nl,
+    % Switching places
+    % Putting end element in starting place
+    replace(ResultRowStart, ColumnPiece, ElemEnd, FinalRowStart),
+    replace(GameState, RowPiece, FinalRowStart, IntermidiateGameState),
+    write('Replace: '), write(ResultRowStart), write(' with '), write(FinalRowStart), nl,
+    write('Game State: '), nl,
+    write(IntermidiateGameState), nl, nl,
+    % Putting end element in end place
+    replace(ResultRowEnd, Column, ElemStart, FinalRowEnd),
+    replace(IntermidiateGameState, Row, FinalRowEnd, NewGameState),
+    write('Replace: '), write(ResultRowEnd), write(' with '), write(FinalRowEnd), nl,
+    write('Game State: '), nl,
+    write(NewGameState).
+
+/*
+
 % change elements from (RowPiece,ColumnPiece) para (Row, Column) 
 change_board(RowPiece, ColumnPiece, Row, Column, GameState,NewGameState) :-
     write('Changes board!'), nl, 
     write('From [r/c]: '), write(RowPiece), write('/'), write(ColumnPiece), nl,
     write('To [r/c]: '), write(Row), write('/'), write(Column).
+
+
+    */
 
 % change elements from (RowPiece,ColumnPiece) para (Row, Column) 
 change_board(RowPiece, ColumnPiece, Row, Column, RowFood, ColumnFood, GameState, NewGameState) :-
@@ -104,13 +165,3 @@ change_board(RowPiece, ColumnPiece, Row, Column, RowFood, ColumnFood, GameState,
     write('From [r/c]: '), write(RowPiece), write('/'), write(ColumnPiece), nl,
     write('To [r/c]: '), write(Row), write('/'), write(Column), nl,
     write('And eats [r/c]: '), write(RowFood), write('/'), write(ColumnFood). 
-
-
-
-%replace(List,Index,Value,NewList)
-replace([_|T], 0, X, [X|T]).
-replace([H|T], I, X, [H|R]):-
-        I > -1, 
-        NI is I-1,
-        replace(T, NI, X, R), !.
-replace(L, _, _, L).

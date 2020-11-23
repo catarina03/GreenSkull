@@ -19,8 +19,8 @@ play_round(GameState, Player, GreenSkull):-
     display_game(GameState-GreenSkull,Player),
     move(GameState,Player,NewGameState),
     set_next_player(Player, NextPlayer),
-    \+ is_over(GameState),!,
-    play_round(GameState, NextPlayer, GreenSkull).
+    \+ is_over(NewGameState),!,
+    play_round(NewGameState, NextPlayer, GreenSkull).
 
 % Displays a message when the game ends.
 /*
