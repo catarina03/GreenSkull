@@ -1,8 +1,66 @@
 :-include('display.pl').
 :-include('moves.pl').
 
+play:-
+    write('                  |   G R E E N  S K U L L  |'),nl,
+    write('               ---------------------------------'),nl,
+    write('                  |     1. Instructions     |'),nl,
+    write('                  |     2. Play             |'),nl,
+    write('               ---------------------------------'),nl,
+    write('                  |                         |'),nl,
+    write('               Option: '),read(C),nl,nl,
+    option(C).
+
+option(1):-
+    write('                  | I N S T R U C T I O N S |'),nl,
+    write('               ---------------------------------'),nl,
+    write('                  | Try to get your pieces  |'),nl,
+    write('                  | across the field while  |'),nl,
+    write('                  | eating as many enimies  |'),nl,
+    write('                  | as you can!             |'),nl,
+    write('                  |                         |'),nl,
+    write('                  | Whoever holds the Green |'),nl,
+    write('                  | Skull, is in charge of  |'),nl,
+    write('                  | the Zombienation!       |'),nl,
+    write('               ---------------------------------'),nl,
+    write('                  |                         |'),nl,nl,nl,
+    play.
+
+option(2):-
+    write('                  |         P L A Y         |'),nl,
+    write('               ---------------------------------'),nl,
+    write('                  |     1. Human VS Human   |'),nl,
+    write('                  |     2. Human Starts     |'),nl,
+    write('                  |     3. Pc Starts        |'),nl,
+    write('                  |     4. Pc VS Pc         |'),nl,
+    write('               ---------------------------------'),nl,
+    write('                  |                         |'),nl,nl,
+    write('                Option: '),read(C),nl,nl,
+    play_game(C).
+
+play_game(1):-
+    write('                   H U M A N   VS   H U M A N   '),nl,
+    write('               ---------------------------------'),nl,nl,
+    human_human.
+
+play_game(2):-
+    write('                      H U M A N   VS   P C      '),nl,
+    write('               ---------------------------------'),nl,nl.
+    %human_pc.
+
+play_game(3):-
+    write('                      P C   VS   H U M A N      '),nl,
+    write('               ---------------------------------'),nl,nl.
+    %pc_human.
+
+play_game(3):-
+    write('                         P C   VS   P C         '),nl,
+    write('               ---------------------------------'),nl,nl.
+    %pc_pc.
+
+%------------ H U M A N   VS   H U M A N -----------------------------
 % Starts the game
-play :- 
+human_human:- 
     initial(GameState-Player-GreenSkull),
     play_round(GameState, Player, GreenSkull).
 

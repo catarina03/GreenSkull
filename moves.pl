@@ -3,8 +3,8 @@
 % Reads input from user
 input_play(Message,Row,Column) :-
     write(Message),nl,
-    write('Row: '), read(Row),
-    write('Column: '), read(Column),nl.
+    write('  Row: '), read(Row),
+    write('  Column: '), read(Column),nl.
 
 
 % Player makes a move
@@ -16,7 +16,7 @@ move(GameState,Player,NewGameState):-
 % Choose piece you want to move and sees if is valid-------------------------------------
 choose_piece(GameState,Player,Row,Column):-
     repeat,
-    input_play('Which piece:',Row,Column),
+    input_play('  Which piece:',Row,Column),
     validPiece(GameState,Player,Row,Column),!, write('valid'),nl.
 
 
@@ -41,7 +41,7 @@ validPiece(GameState,z,Row,Column):-
 %choose where you want to move the piece and sees if is valid----------------------------
 choose_move(Player, GameState, RowPiece, ColumnPiece, NewGameState):-
     repeat,
-    input_play('Where to:',Row,Column),
+    input_play('  Where to:',Row,Column),
     valid_move(Player,RowPiece,ColumnPiece,Row, Column, GameState, NewGameState).
     % change_board(RowPiece,ColumnPiece, Row, Column, GameState,NewGameState).
 

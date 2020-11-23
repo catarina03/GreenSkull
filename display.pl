@@ -13,7 +13,7 @@
 display_game(GameState-GreenSkull, Player) :-
     nl,nl,print_board(GameState,0),
     hex_code(10,C),write(C),nl,nl,
-    write('                         z o m b i e s'),nl,
+    write('                          z o m b i e s'),nl,
     display_column_numbers,
     display_green_skull(GreenSkull), 
     display_player_turn(Player),
@@ -53,12 +53,11 @@ print_row([H|T]):-
 
 % Prints column numbers
 display_column_numbers:-
-%   write('            \\ / \\ / \\ / \\ / \\ / \\ / \\ / \\ / \\ / \\ /   '), nl, nl,
- write('        - - - - - - - - - - - - - - - - - - - - - - - -   '), nl, nl,
-    write('       1   2   3   4   5   6   7   8   9   10'),
+     write('         - - - - - - - - - - - - - - - - - - - - - - - -   '), nl, nl,
+    write('        1   2   3   4   5   6   7   8   9   10'),
     nl.
     
 % Displays game over message
 display_game_over :- 
     nl, 
-    write('                       GAME OVER').
+    write('                        GAME OVER').

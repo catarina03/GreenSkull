@@ -9,29 +9,29 @@ player(g).
 player(z).
 
 % Replaces number with string with spaces and row number.
-space(0,'                     1 |     ').
-space(1,'                   2 |     ').
-space(2,'                 3 |     ').
-space(3,'               4 |     ').
-space(4,'             5 |     ').
-space(5,'           6 |     ').
-space(6,'         7 |     ').
-space(7,'       8 |     ').
-space(8,'     9 |     ').
-space(9,'  10 |     ').
+space(0,'                      1 |     ').
+space(1,'                    2 |     ').
+space(2,'                  3 |     ').
+space(3,'                4 |     ').
+space(4,'              5 |     ').
+space(5,'            6 |     ').
+space(6,'          7 |     ').
+space(7,'        8 |     ').
+space(8,'      9 |     ').
+space(9,'   10 |     ').
 
 
-hex_code(0,'                        /     / \\     \\').
-hex_code(1,'                      /     / \\ / \\     \\').
-hex_code(2,'                    /     / \\ / \\ / \\   g \\').
-hex_code(3,'                  / s   / \\ / \\ / \\ / \\   o \\').
-hex_code(4,'                / c   / \\ / \\ / \\ / \\ / \\   b \\').
-hex_code(5,'              / r   / \\ / \\ / \\ / \\ / \\ / \\   l \\').
-hex_code(6,'            / o   / \\ / \\ / \\ / \\ / \\ / \\ / \\   i \\').
-hex_code(7,'          /     / \\ / \\ / \\ / \\ / \\ / \\ / \\ / \\   n \\').
-hex_code(8,'        /     / \\ / \\ / \\ / \\ / \\ / \\ / \\ / \\ / \\   s \\').
-hex_code(9,'      /     / \\ / \\ / \\ / \\ / \\ / \\ / \\ / \\ / \\ / \\     \\').
-hex_code(10,'    /       \\ / \\ / \\ / \\ / \\ / \\ / \\ / \\ / \\ / \\ /       \\').
+hex_code(0,'                         /     / \\     \\').
+hex_code(1,'                       /     / \\ / \\     \\').
+hex_code(2,'                     /     / \\ / \\ / \\   g \\').
+hex_code(3,'                   / s   / \\ / \\ / \\ / \\   o \\').
+hex_code(4,'                 / c   / \\ / \\ / \\ / \\ / \\   b \\').
+hex_code(5,'               / r   / \\ / \\ / \\ / \\ / \\ / \\   l \\').
+hex_code(6,'             / o   / \\ / \\ / \\ / \\ / \\ / \\ / \\   i \\').
+hex_code(7,'           /     / \\ / \\ / \\ / \\ / \\ / \\ / \\ / \\   n \\').
+hex_code(8,'         /     / \\ / \\ / \\ / \\ / \\ / \\ / \\ / \\ / \\   s \\').
+hex_code(9,'       /     / \\ / \\ / \\ / \\ / \\ / \\ / \\ / \\ / \\ / \\     \\').
+hex_code(10,'     /       \\ / \\ / \\ / \\ / \\ / \\ / \\ / \\ / \\ / \\ /       \\').
 
 
 % Replaces symbols with characters for easier display
