@@ -12,17 +12,64 @@ initial_board([
      [g,g,g,e,e,e,o,o,o],   
     [g,g,g,g,e,e,o,o,o,o] ]).
 
+
+
+%initial list
+
+testing_list :-
+    initial_list(X),
+    test(X, 3, 'ola', Y).
+
+initial_list([g,g,g,g,e,e,o,o,o,o]).
+test(X, Index, Value,Y) :-
+    replace(X, Index, Value, Y),
+    write(Y).
+
+
+testing_board :-
+    initial_board(GameState),
+    % [7, 1] (g) -> [10, 10] (o)
+    change_board(7, 1, 10, 10, GameState,NewGameState).
+
+
 %replace(List,Index,Value,NewList)
-replace([_|T], 0, X, [X|T]).
+replace([_|T], 1, X, [X|T]).
 replace([H|T], I, X, [H|R]):-
         I > -1, 
         NI is I-1,
         replace(T, NI, X, R), !.
 replace(L, _, _, L).
 
+
+change_board(RowPiece,ColumnPiece, Row, Column, GameState,NewGameState) :-
+    % Value of place piece is jumping from - start
+    nth1(RowPiece,GameState,ResultRowStart),
+    nth1(ColumnPiece,ResultRowStart,ElemStart),
+    write('Start piece: '), write(ElemStart), nl,
+    % Value of place piece is jumping to - end
+    nth1(Row,GameState,ResultRowEnd),
+    nth1(Column, ResultRowEnd,ElemEnd),
+    write('End piece: '), write(ElemEnd), nl,
+    % Switching places
+    % Putting end element in starting place
+    replace(ResultRowStart, ColumnPiece, ElemEnd, FinalRowStart),
+    replace(GameState, RowPiece, FinalRowStart, IntermidiateGameState),
+    write('Replace: '), write(ResultRowStart), write(' with '), write(FinalRowStart), nl,
+    write('Game State: '), nl,
+    write(IntermidiateGameState), nl, nl,
+    % Putting end element in end place
+    replace(ResultRowEnd, Column, ElemStart, FinalRowEnd),
+    replace(IntermidiateGameState, Row, FinalRowEnd, NewGameState),
+    write('Replace: '), write(ResultRowEnd), write(' with '), write(FinalRowEnd), nl,
+    write('Game State: '), nl,
+    write(NewGameState).
+
+/*
+
+
+
 change_board(RowPiece,ColumnPiece, Row, Column, GameState,NewGameState) :-
     Row==RowPiece,
-    
     %faz append à NewGameState da lista 0 até lista Row.
     sub_append(1,Row,GameState,NewGameState),
     write('aqui'),
@@ -34,6 +81,7 @@ change_board(RowPiece,ColumnPiece, Row, Column, GameState,NewGameState) :-
     append(NewGameState,L2).
 
     sub_append(Row+1,11,GameState,NewGameState).
+
 
 change_board(RowPiece,ColumnPiece,Row,Column,GameState,NewGameState):-
     Row<RowPiece,
@@ -97,6 +145,8 @@ sub_append(Row1,Row2,GameState,NewGameState):-
     sub_append(Row,Row2,GameState,NewGameState).
 
 sub_append(Row1,Row2,GameState,NewGameState):- Row1==Row2. 
+
+*/
 
 
 play:-
