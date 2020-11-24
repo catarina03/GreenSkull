@@ -8,9 +8,13 @@ input_play(Message,Row,Column) :-
 
 
 % Player makes a move
-move(GameState,Player,NewGameState):- 
+move(GameState-[PO,PG,PZ],Player,NewGameState-[PO1,PG1,PZ1]):- 
     choose_piece(GameState,Player,RowPiece,ColumnPiece),
-    choose_move(Player,GameState,RowPiece,ColumnPiece,NewGameState).
+    choose_move(Player,GameState,RowPiece,ColumnPiece,NewGameState-Elem),
+    change_pontuation([PO,PG,PZ]-Player-Elem,[PO1,PG1,PZ1]),
+    write(Elem),
+    write([PO,PG,PZ]),
+    write([PO1,PG1,PZ1]).
     
 
 % Choose piece you want to move and sees if is valid-------------------------------------
@@ -39,23 +43,23 @@ validPiece(GameState,z,Row,Column):-
 
 
 %choose where you want to move the piece and sees if is valid----------------------------
-choose_move(Player, GameState, RowPiece, ColumnPiece, NewGameState):-
+choose_move(Player, GameState, RowPiece, ColumnPiece, NewGameState-Elem):-
     repeat,
     input_play('  Where to:',Row,Column),
-    valid_move(Player,RowPiece,ColumnPiece,Row, Column, GameState, NewGameState).
+    valid_move(Player,RowPiece,ColumnPiece,Row, Column, GameState, NewGameState-Elem).
     % change_board(RowPiece,ColumnPiece, Row, Column, GameState,NewGameState).
 
 %
 %RowPiece - piece we're moving
 %Row - row we're going to
-valid_move(Player, RowPiece, ColumnPiece, Row, Column, GameState, NewGameState):-
+valid_move(Player, RowPiece, ColumnPiece, Row, Column, GameState, NewGameState-Elem):-
     nth1(Row,GameState,L),
     nth1(Column,L,Elem),
     Elem==e,
     R is abs(RowPiece-Row),
     C is abs(ColumnPiece-Column), 
     R=<2,C=<2, 
-    check_surroundings(RowPiece, ColumnPiece, Row, Column, GameState, NewGameState).
+    check_surroundings(RowPiece, ColumnPiece, Row, Column, GameState, NewGameState-Elem).
 
 % 
 check_adjacent_movement(RowPiece, ColumnPiece, Row, Column) :-
@@ -75,16 +79,17 @@ check_adjacent_movement(RowPiece, ColumnPiece, Row, Column) :-
 % 7,5;  6,4;  6,3;  7,3;  8,4;  8,5
 
 % Verifies if destination cell is adjacent, if so it changes the board
-check_surroundings(RowPiece, ColumnPiece, Row, Column, GameState, NewGameState):-
+check_surroundings(RowPiece, ColumnPiece, Row, Column, GameState, NewGameState-Elem):-
     R is abs(RowPiece-Row),
     C is abs(ColumnPiece-Column),
     R=<1, C=<1,
     check_adjacent_movement(RowPiece, ColumnPiece, Row, Column),
-    change_board(RowPiece,ColumnPiece, Row, Column, GameState,NewGameState).
+    change_board(RowPiece,ColumnPiece, Row, Column, GameState,NewGameState)
+    Elem=e.
 
 % If player wants to eat something
 % Checks if what's between current position and destination is something edible (not white space)
-check_surroundings(RowPiece, ColumnPiece, Row, Column, GameState, NewGameState):-
+check_surroundings(RowPiece, ColumnPiece, Row, Column, GameState, NewGameState-Elem):-
     RowTest is (Row-RowPiece)/2, is_int(RowTest), R is ceiling(RowTest),
     ColumnTest is (Column-ColumnPiece)/2, is_int(ColumnTest), C is round(ColumnTest), 
     RowFood is RowPiece + R, ColumnFood is ColumnPiece + C,
@@ -206,4 +211,33 @@ change_board(RowPiece, ColumnPiece, Row, Column, RowFood, ColumnFood, GameState,
     write('Game State: '), nl,
     write(NewGameState).
 
+%Pontuation ORCS:
+change_pontuation([PO,PG,PZ]-o-Elem,[PO1,PG1,PZ1]):-
+    Elem \== e, 
+    Elem \== o, 
+    PO1 is PO+1,
+    PG1 is PG,
+    PZ1 is PZ.
 
+
+%Pontuation GOBLINS:
+change_pontuation([PO,PG,PZ]-g-Elem,[PO1,PG1,PZ1]):-
+    Elem \== e, 
+    Elem \== g, 
+    PO1 is PO,
+    PG1 is PG+1,
+    PZ1 is PZ.
+
+%Pontuation ZOMBIES:
+change_pontuation([PO,PG,PZ]-z-Elem,[PO1,PG1,PZ1]):-
+    Elem \== e, 
+    Elem \== z, 
+    PO1 is PO,
+    PG1 is PG,
+    PZ1 is PZ+1.
+
+%if ELem=e, then pontuation stays the same
+change_pontuation([PO,PG,PZ]-Player-Elem,[PO1,PG1,PZ1]):-
+    PO1 is PO,
+    PG1 is PG,
+    PZ1 is PZ. 

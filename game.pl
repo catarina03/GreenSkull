@@ -62,7 +62,7 @@ play_game(3):-
 % Starts the game
 human_human:- 
     initial(GameState-Player-GreenSkull),
-    play_round(GameState, Player, GreenSkull).
+    play_round(GameState-[0,0,0], Player, GreenSkull).
 
 
 % Initializes the game
@@ -73,12 +73,12 @@ initial(GameState-Player-GreenSkull) :-
    
    
 % Plays one round of game
-play_round(GameState, Player, GreenSkull):- 
+play_round(GameState-[PO,PG,PZ], Player, GreenSkull):- 
     display_game(GameState-GreenSkull,Player),
-    move(GameState,Player,NewGameState),
+    move(GameState-[PO,PG,PZ],Player,NewGameState-[PO1,PG1,PZ1]),
     set_next_player(Player, NextPlayer),
     \+ is_over(NewGameState),!,
-    play_round(NewGameState, NextPlayer, GreenSkull).
+    play_round(NewGameState-[PO1,PG1,PZ1], NextPlayer, GreenSkull).
 
 % Displays a message when the game ends.
 /*
