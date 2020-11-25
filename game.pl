@@ -77,7 +77,7 @@ play_round(GameState-[PO,PG,PZ], Player, GreenSkull):-
     display_game(GameState-GreenSkull,Player),
     move(GameState-[PO,PG,PZ],Player,NewGameState-[PO1,PG1,PZ1]),
     set_next_player(Player, NextPlayer),
-    \+ is_over(NewGameState),!,
+    \+ is_over(NewGameState,1),!,
     play_round(NewGameState-[PO1,PG1,PZ1], NextPlayer, GreenSkull).
 
 % Displays a message when the game ends.
@@ -88,7 +88,74 @@ play(Player):-
     */
 
 % Checks if game is over (placeholder)
-is_over(GameState) :- false.
+is_over(GameState,[O,G,Z]) :- 
+   pieces_out(GameState,1),
+   write('pieces out').
+
+is_over(GameState,[O,G,Z]):-
+    color_in_line(GameState,[O,G,Z]),
+    write('color in line').
+
+
+pieces_out(GameState,11).
+%verifica se Z está em jogo
+pieces_out(GameState,N):-
+    N=<10,
+    nth1(N,GameState,L),
+    \+ member(z,L),
+    N1 is N+1,
+    pieces_out(GameState,N1).
+
+%verifica se O está em jogo
+pieces_out(GameState,N) :- 
+    N=<10,
+    nth1(N,GameState,L),
+    \+ member(o,L),
+    N1 is N+1,
+    pieces_out(GameState,N1).
+
+%verifica se G está em jogo
+pieces_out(GameState,N) :- 
+    N=<10,
+    nth1(N,GameState,L),
+    \+member(g,L),
+    N1 is N+1,
+    pieces_out(GameState,N1).
+
+%verifica se Z está na ultima linha.
+color_in_line(GameState,[O,G,Z]) :- 
+    nth1(10,GameState,L),
+    count(z,L,N),
+    N==Z.
+    
+%verifica se O está nos primeiros elementos de linha.
+color_in_line(GameState,[O,G,Z]) :- 
+    get_orcs_line(GameState,L,1),
+    count(o,L,N),
+    N==O.
+
+get_orcs_line(GameState,[],11).
+get_orcs_line(GameState,[T1|T2],N):-
+    N=<10,
+    nth1(N,GameState,L1),
+    nth1(1,L1,T1),
+    N1 is N+1,
+    get_orcs_line(GameState,T2,N1).
+    
+%verifica se G está nos primeiros elementos de linha.
+color_in_line(GameState,[O,G,Z]) :- 
+    get_goblins_line(GameState,L,1),
+    count(g,L,N),
+    N==G.
+
+get_goblins_line(GameState,[],11).
+get_goblins_line(GameState,[T1|T2],N):-
+    N=<10,
+    nth1(N,GameState,L1),
+    nth1(N,L1,T1),
+    N1 is N+1,
+    get_goblins_line(GameState,T2,N1).
+
 
 % Defines the next player according to who played before
 % set_next_player(Player, NextPlayer)

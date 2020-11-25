@@ -59,7 +59,9 @@ valid_move(Player, RowPiece, ColumnPiece, Row, Column, GameState, NewGameState-E
     R is abs(RowPiece-Row),
     C is abs(ColumnPiece-Column), 
     R=<2,C=<2, 
-    check_surroundings(RowPiece, ColumnPiece, Row, Column, GameState, NewGameState-Elem).
+    write('hello1'),
+    check_surroundings(RowPiece, ColumnPiece, Row, Column, GameState, NewGameState-Elem),
+    write('hello2').
 
 % 
 check_adjacent_movement(RowPiece, ColumnPiece, Row, Column) :-
@@ -79,12 +81,12 @@ check_adjacent_movement(RowPiece, ColumnPiece, Row, Column) :-
 % 7,5;  6,4;  6,3;  7,3;  8,4;  8,5
 
 % Verifies if destination cell is adjacent, if so it changes the board
-check_surroundings(RowPiece, ColumnPiece, Row, Column, GameState, NewGameState-Elem):-
+check_surroundings(RowPiece, ColumnPiece, Row, Column, GameState,NewGameState-Elem):-
     R is abs(RowPiece-Row),
     C is abs(ColumnPiece-Column),
     R=<1, C=<1,
     check_adjacent_movement(RowPiece, ColumnPiece, Row, Column),
-    change_board(RowPiece,ColumnPiece, Row, Column, GameState,NewGameState)
+    change_board(RowPiece,ColumnPiece, Row, Column, GameState,NewGameState),
     Elem=e.
 
 % If player wants to eat something
