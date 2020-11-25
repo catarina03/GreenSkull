@@ -53,8 +53,7 @@ print_row([H|T]):-
 
 % Prints column numbers
 display_column_numbers:-
-%   write('            \\ / \\ / \\ / \\ / \\ / \\ / \\ / \\ / \\ / \\ /   '), nl, nl,
- write('        - - - - - - - - - - - - - - - - - - - - - - - -   '), nl, nl,
+    write('        - - - - - - - - - - - - - - - - - - - - - - - -   '), nl, nl,
     write('       1   2   3   4   5   6   7   8   9   10'),
     nl.
     

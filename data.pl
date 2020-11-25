@@ -50,7 +50,7 @@ initial_board([
          [e,e,z,e,e],         
         [e,e,z,z,e,e],             
        [g,e,e,z,e,z,o],       
-      [g,g,e,e,e,e,o,o],        
+      [g,g,e,e,z,e,o,o],        
      [g,g,g,e,e,e,o,o,o],   
     [g,g,g,g,e,e,o,o,o,o] ]).
 
