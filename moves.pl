@@ -54,8 +54,8 @@ choose_move(Player, GameState, RowPiece, ColumnPiece, NewGameState-Elem):-
 %Row - row we're going to
 valid_move(Player, RowPiece, ColumnPiece, Row, Column, GameState, NewGameState-Elem):-
     nth1(Row,GameState,L),
-    nth1(Column,L,Elem),
-    Elem==e,
+    nth1(Column,L,ElemEnd),
+    ElemEnd==e,
     R is abs(RowPiece-Row),
     C is abs(ColumnPiece-Column), 
     R=<2,C=<2, 
