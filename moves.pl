@@ -10,6 +10,7 @@ input_play(Message,Row,Column) :-
 % Player makes a move
 move(GameState,Player,NewGameState):- 
     choose_piece(GameState,Player,RowPiece,ColumnPiece),
+    valid_moves(GameState, Player-RowPiece-ColumnPiece, LAM-LEM),
     choose_move(Player,GameState,RowPiece,ColumnPiece,NewGameState).
     
 
@@ -36,6 +37,19 @@ validPiece(GameState,z,Row,Column):-
     nth1(Column,L,Elem),
     Elem==z.
 %----------------------------------------------------------------------------------------
+
+% For a piece [Row/Column], get its valid moves
+valid_moves(GameState, Player-Row-Column, ListAdjacentMoves-ListEatMoves) :-
+    get_adjacent_move(Row, Column, ListAdjacentMoves, GameState),
+    write('Adjacent: '), write(ListAdjacentMoves), nl,
+
+    get_move_eat(Row, Column, ListEatMoves, GameState),
+    write('Eats: '), write(EatsList), nl.
+
+
+% ----------------------------------------------------------------------------------
+
+
 
 
 %choose where you want to move the piece and sees if is valid----------------------------
@@ -274,8 +288,6 @@ get_move_eat(RowPiece, ColumnPiece, L6, GameState) :-
     write('Full plays list: '), write(L6), nl.
 
 
-
-
 % Choose move eat
 % Horizontal
 get_move_left(RowPiece, ColumnPiece, PlaysList, NewPlaysList, GameState) :-
@@ -346,6 +358,85 @@ get_individual_move(RowPiece, ColumnPiece, RowEnd, ColumnEnd, PlaysList, NewPlay
     nth1(RowFood, GameState, RowFoodResult),
     nth1(ColumnFood, RowFoodResult, Elem),
     Elem \== e,
+    % Appends it to the list of plays - PlaysList
+    append(PlaysList, [[RowEnd, ColumnEnd]], NewPlaysList),
+    write('List of plays: '), write(NewPlaysList), nl.
+
+
+% -----------------------------------------------------------------
+
+get_adjacent_move(RowPiece, ColumnPiece, ListOfMoves, GameState) :-
+    write('get_adjacent_move list: '), write(ListOfMoves), nl,
+    get_adjacent_move_left(RowPiece, ColumnPiece, L0, L1, GameState),
+    get_adjacent_move_right(RowPiece, ColumnPiece, L1, L2, GameState),
+    get_adjacent_move_upper_right(RowPiece, ColumnPiece, L2, L3, GameState),
+    get_adjacent_move_lower_left(RowPiece, ColumnPiece, L3, L4, GameState),
+    get_adjacent_move_upper_left(RowPiece, ColumnPiece, L4, L5, GameState),
+    get_adjacent_move_lower_right(RowPiece, ColumnPiece, L5, ListOfMoves, GameState),
+    % trace,
+    write('Full plays list: '), write(ListOfMoves), nl.
+
+
+% Choose move eat
+% Horizontal
+get_adjacent_move_left(RowPiece, ColumnPiece, PlaysList, NewPlaysList, GameState) :-
+    write('Start: '), write(RowPiece), write('/'), write(ColumnPiece), nl,
+    RowEnd = RowPiece,
+    ColumnEnd is ColumnPiece - 1,
+    write('Destiny: '), write(RowEnd), write('/'), write(ColumnEnd), nl,
+    get_individual_move_2(RowPiece, ColumnPiece, RowEnd, ColumnEnd, PlaysList, NewPlaysList, GameState).
+get_adjacent_move_left(_, _, PlaysList, NewPlaysList, _) :- NewPlaysList = PlaysList.
+
+get_adjacent_move_right(RowPiece, ColumnPiece, PlaysList, NewPlaysList, GameState) :-
+write('Start: '), write(RowPiece), write('/'), write(ColumnPiece), nl,
+    RowEnd = RowPiece,
+    ColumnEnd is ColumnPiece + 1,
+    write('Destiny: '), write(RowEnd), write('/'), write(ColumnEnd), nl,
+    get_individual_move_2(RowPiece, ColumnPiece, RowEnd, ColumnEnd, PlaysList, NewPlaysList, GameState).
+get_adjacent_move_right(_, _, PlaysList, NewPlaysList, _) :- NewPlaysList = PlaysList.
+
+% Same column
+get_adjacent_move_upper_right(RowPiece, ColumnPiece, PlaysList, NewPlaysList, GameState) :-
+write('Start: '), write(RowPiece), write('/'), write(ColumnPiece), nl,
+    RowEnd is RowPiece - 1,
+    ColumnEnd = ColumnPiece,
+    write('Destiny: '), write(RowEnd), write('/'), write(ColumnEnd), nl,
+    get_individual_move_2(RowPiece, ColumnPiece, RowEnd, ColumnEnd, PlaysList, NewPlaysList, GameState).
+get_adjacent_move_upper_right(_, _, PlaysList, NewPlaysList, _) :- NewPlaysList = PlaysList.
+
+get_move_lower_left(RowPiece, ColumnPiece, PlaysList, NewPlaysList, GameState) :-
+write('Start: '), write(RowPiece), write('/'), write(ColumnPiece), nl,
+    RowEnd is RowPiece + 1,
+    ColumnEnd = ColumnPiece,
+    write('Destiny: '), write(RowEnd), write('/'), write(ColumnEnd), nl,
+    get_individual_move_2(RowPiece, ColumnPiece, RowEnd, ColumnEnd, PlaysList, NewPlaysList, GameState).
+get_adjacent_move_lower_left(_, _, PlaysList, NewPlaysList, _) :- NewPlaysList = PlaysList.
+
+% Other 2 hypothesis
+get_adjacent_move_upper_left(RowPiece, ColumnPiece, PlaysList, NewPlaysList, GameState) :-
+write('Start: '), write(RowPiece), write('/'), write(ColumnPiece), nl,
+    RowEnd is RowPiece - 1,
+    ColumnEnd is ColumnPiece - 1,
+    write('Destiny: '), write(RowEnd), write('/'), write(ColumnEnd), nl,
+    get_individual_move_2(RowPiece, ColumnPiece, RowEnd, ColumnEnd, PlaysList, NewPlaysList, GameState).
+get_adjacent_move_upper_left(_, _, PlaysList, NewPlaysList, _) :- NewPlaysList = PlaysList.
+
+get_adjacent_move_lower_right(RowPiece, ColumnPiece, PlaysList, NewPlaysList, GameState) :-
+    write('Start: '), write(RowPiece), write('/'), write(ColumnPiece), nl,
+    RowEnd is RowPiece + 1,
+    ColumnEnd is ColumnPiece + 1,
+    write('Destiny: '), write(RowEnd), write('/'), write(ColumnEnd), nl,
+    get_individual_move_2(RowPiece, ColumnPiece, RowEnd, ColumnEnd, PlaysList, NewPlaysList, GameState).
+get_adjacent_move_lower_right(_, _, PlaysList, NewPlaysList, _) :- NewPlaysList = PlaysList.
+
+
+get_individual_move_2(RowPiece, ColumnPiece, RowEnd, ColumnEnd, PlaysList, NewPlaysList, GameState):-
+    RowEnd =< 10,
+    ColumnEnd =< RowEnd,
+    % Checks end cell to see if it's empty
+    nth1(RowEnd, GameState, RowEndResult),
+    nth1(ColumnEnd, RowEndResult, ElemEnd),
+    ElemEnd == e,
     % Appends it to the list of plays - PlaysList
     append(PlaysList, [[RowEnd, ColumnEnd]], NewPlaysList),
     write('List of plays: '), write(NewPlaysList), nl.
