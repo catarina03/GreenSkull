@@ -1,4 +1,5 @@
 :-include('utils.pl').
+:-include('scores.pl').
 
 % Reads input from user
 input_play(Message,Row,Column) :-
@@ -11,17 +12,14 @@ input_play(Message,Row,Column) :-
 move(GameState-[PO,PG,PZ],Player,NewGameState-[PO1,PG1,PZ1]):- 
     choose_piece(GameState,Player,RowPiece,ColumnPiece),
     choose_move(Player,GameState,RowPiece,ColumnPiece,NewGameState-Elem),
-    change_pontuation([PO,PG,PZ]-Player-Elem,[PO1,PG1,PZ1]),
-    write(Elem),
-    write([PO,PG,PZ]),
-    write([PO1,PG1,PZ1]).
+    change_score([PO,PG,PZ]-Player-Elem,[PO1,PG1,PZ1]).
     
 
 % Choose piece you want to move and sees if is valid-------------------------------------
 choose_piece(GameState,Player,Row,Column):-
     repeat,
     input_play('  Which piece:',Row,Column),
-    validPiece(GameState,Player,Row,Column),!, write('valid'),nl.
+    validPiece(GameState,Player,Row,Column),!.
 
 
 % Sees if the piece chosen is valid
@@ -59,9 +57,7 @@ valid_move(Player, RowPiece, ColumnPiece, Row, Column, GameState, NewGameState-E
     R is abs(RowPiece-Row),
     C is abs(ColumnPiece-Column), 
     R=<2,C=<2, 
-    write('hello1'),
-    check_surroundings(RowPiece, ColumnPiece, Row, Column, GameState, NewGameState-Elem),
-    write('hello2').
+    check_surroundings(RowPiece, ColumnPiece, Row, Column, GameState, NewGameState-Elem).
 
 % 
 check_adjacent_movement(RowPiece, ColumnPiece, Row, Column) :-
@@ -148,35 +144,23 @@ change_board(RowPiece, ColumnPiece, Row, Column, RowFood, ColumnFood, GameState,
     % Value of place piece is jumping from - start
     nth1(RowPiece,GameState,ResultRowStart),
     nth1(ColumnPiece,ResultRowStart,ElemStart),
-    write('Start piece: '), write(ElemStart), nl,
     % Value of food piece 
     nth1(RowFood,GameState,ResultRowFood),
     nth1(ColumnFood, ResultRowFood,ElemFood),
-    write('Food piece: '), write(ElemFood), nl,
     % Value of place piece is jumping to - end
     nth1(Row,GameState,ResultRowEnd),
     nth1(Column, ResultRowEnd,ElemEnd),
-    write('End piece: '), write(ElemEnd), nl,
     % Switching places
     % Putting end element in starting place
     ResultRowStart == ResultRowEnd, !,
     replace(ResultRowStart, ColumnPiece, ElemEnd, IntermidiateRow),
     replace(GameState, RowPiece, IntermidiateRow, IntermidiateGameState),
-    write('Replace: '), write(ResultRowStart), write(' with '), write(IntermidiateRow), nl,
-    write('Game State: '), nl,
-    write(IntermidiateGameState), nl, nl,
     % Replacing food element with empty space
     replace(IntermidiateRow, ColumnFood, e, FoodRow),
     replace(IntermidiateGameState, RowFood, FoodRow, FoodGameState),
-    write('Replace: '), write(IntermidiateRow), write(' with '), write(FoodRow), nl,
-    write('Game State: '), nl,
-    write(FoodGameState),
     % Putting end element in end place
     replace(FoodRow, Column, ElemStart, FinalRow),
-    replace(FoodGameState, Row, FinalRow, NewGameState),
-    write('Replace: '), write(IntermidiateRow), write(' with '), write(FinalRow), nl,
-    write('Game State: '), nl,
-    write(NewGameState).
+    replace(FoodGameState, Row, FinalRow, NewGameState).
 
 
 % Falta incrementar a pontuação
@@ -184,62 +168,19 @@ change_board(RowPiece, ColumnPiece, Row, Column, RowFood, ColumnFood, GameState,
     % Value of place piece is jumping from - start
     nth1(RowPiece,GameState,ResultRowStart),
     nth1(ColumnPiece,ResultRowStart,ElemStart),
-    write('Start piece: '), write(ElemStart), nl,
     % Value of food piece 
     nth1(RowFood,GameState,ResultRowFood),
     nth1(ColumnFood, ResultRowFood,ElemFood),
-    write('Food piece: '), write(ElemFood), nl,
     % Value of place piece is jumping to - end
     nth1(Row,GameState,ResultRowEnd),
     nth1(Column, ResultRowEnd,ElemEnd),
-    write('End piece: '), write(ElemEnd), nl,
     % Switching places
     % Putting end element in starting place
     replace(ResultRowStart, ColumnPiece, ElemEnd, FinalRowStart),
     replace(GameState, RowPiece, FinalRowStart, IntermidiateGameState),
-    write('Replace: '), write(ResultRowStart), write(' with '), write(FinalRowStart), nl,
-    write('Game State: '), nl,
-    write(IntermidiateGameState), nl, nl,
     % Putting space in food element
     replace(ResultRowFood, ColumnFood, e, FinalRowFood),
     replace(IntermidiateGameState, RowFood, FinalRowFood, FoodGameState),
-    write('Replace: '), write(ResultRowFood), write(' with '), write(FinalRowFood), nl,
-    write('Game State: '), nl,
-    write(FoodGameState), nl, nl,
     % Putting end element in end place
     replace(ResultRowEnd, Column, ElemStart, FinalRowEnd),
-    replace(FoodGameState, Row, FinalRowEnd, NewGameState),
-    write('Replace: '), write(ResultRowEnd), write(' with '), write(FinalRowEnd), nl,
-    write('Game State: '), nl,
-    write(NewGameState).
-
-%Pontuation ORCS:
-change_pontuation([PO,PG,PZ]-o-Elem,[PO1,PG1,PZ1]):-
-    Elem \== e, 
-    Elem \== o, 
-    PO1 is PO+1,
-    PG1 is PG,
-    PZ1 is PZ.
-
-
-%Pontuation GOBLINS:
-change_pontuation([PO,PG,PZ]-g-Elem,[PO1,PG1,PZ1]):-
-    Elem \== e, 
-    Elem \== g, 
-    PO1 is PO,
-    PG1 is PG+1,
-    PZ1 is PZ.
-
-%Pontuation ZOMBIES:
-change_pontuation([PO,PG,PZ]-z-Elem,[PO1,PG1,PZ1]):-
-    Elem \== e, 
-    Elem \== z, 
-    PO1 is PO,
-    PG1 is PG,
-    PZ1 is PZ+1.
-
-%if ELem=e, then pontuation stays the same
-change_pontuation([PO,PG,PZ]-Player-Elem,[PO1,PG1,PZ1]):-
-    PO1 is PO,
-    PG1 is PG,
-    PZ1 is PZ. 
+    replace(FoodGameState, Row, FinalRowEnd, NewGameState).

@@ -54,31 +54,18 @@ initial_board([
      [g,g,g,e,e,e,o,o,o],   
     [g,g,g,g,e,e,o,o,o,o] ]).
 
-% Intermediate Board
-intermediate_board([
-             [0],
-            [0,0],
-           [z,0,0],
-          [0,0,0,0],
-         [0,z,z,0,0],
-        [0,0,z,z,0,o],
-       [g,0,0,0,0,0,0],
-      [g,0,0,0,0,0,0,o],
-     [g,g,0,0,0,z,0,0,o],
-    [g,g,0,0,g,0,0,o,o,o] ]).
 
-% Final Board
-final_board([
-             [0],
-            [0,0],
-           [0,0,g],
-          [0,0,0,g],
-         [0,0,0,0,g],
-        [0,0,0,0,0,g],
-       [o,0,0,0,0,0,g],
-      [o,0,0,0,0,0,g,0],
-     [o,0,0,0,0,0,0,0,g],
-    [o,0,0,0,0,0,0,0,0,0] ]).
+final_board([       
+             [e],         
+            [e,e],         
+           [e,e,e],        
+          [e,e,e,e],         
+         [o,e,e,e,e],         
+        [o,e,z,e,e,g],             
+       [o,e,e,g,e,e,g],       
+      [o,e,e,e,e,e,e,g],        
+     [o,e,e,e,e,e,e,e,e],   
+    [o,z,z,z,e,e,e,e,e,e] ]).
 
 % The orcs start playing first
 initial_player(o).

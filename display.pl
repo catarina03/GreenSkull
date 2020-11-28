@@ -61,3 +61,72 @@ display_column_numbers:-
 display_game_over :- 
     nl, 
     write('                        GAME OVER').
+
+%Display game menus:
+display_menu(C):-
+    write('                  |   G R E E N  S K U L L  |'),nl,
+    write('               ---------------------------------'),nl,
+    write('                  |     1. Instructions     |'),nl,
+    write('                  |     2. Play             |'),nl,
+    write('               ---------------------------------'),nl,
+    write('                  |                         |'),nl,
+    write('               Option: '),read(C),nl,nl.
+
+display_instructions:-
+    write('                  | I N S T R U C T I O N S |'),nl,
+    write('               ---------------------------------'),nl,
+    write('                  | Try to get your pieces  |'),nl,
+    write('                  | across the field while  |'),nl,
+    write('                  | eating as many enimies  |'),nl,
+    write('                  | as you can!             |'),nl,
+    write('                  |                         |'),nl,
+    write('                  | Whoever holds the Green |'),nl,
+    write('                  | Skull, is in charge of  |'),nl,
+    write('                  | the Zombienation!       |'),nl,
+    write('               ---------------------------------'),nl,
+    write('                  |                         |'),nl,nl,nl.
+
+display_play(C):-
+    write('                  |         P L A Y         |'),nl,
+    write('               ---------------------------------'),nl,
+    write('                  |     1. Human VS Human   |'),nl,
+    write('                  |     2. Human Starts     |'),nl,
+    write('                  |     3. Pc Starts        |'),nl,
+    write('                  |     4. Pc VS Pc         |'),nl,
+    write('               ---------------------------------'),nl,
+    write('                  |                         |'),nl,nl,
+    write('                Option: '),read(C),nl,nl.
+
+display_play_mode(1):-
+    write('                   H U M A N   VS   H U M A N   '),nl,
+    write('               ---------------------------------'),nl,nl.
+
+display_play_mode(2):-
+    write('                      H U M A N   VS   P C      '),nl,
+    write('               ---------------------------------'),nl,nl.
+
+display_play_mode(3):-
+    write('                      P C   VS   H U M A N      '),nl,
+    write('               ---------------------------------'),nl,nl.
+
+display_play_mode(4):-
+    write('                         P C   VS   P C         '),nl,
+    write('               ---------------------------------'),nl,nl.
+        
+display_scores(O-G-Z):-
+    write('                          S C O R E S       '),nl,
+    write('               ---------------------------------'),nl,
+    write('                        ORCS: '), write(O),nl,
+    write('                        GOBLINS: '), write(G),nl,
+    write('                        ZOMBIES: '), write(Z),nl,
+    write('               ---------------------------------'),nl,
+    nl,nl,nl.
+
+display_final_scores(O-G-Z):-
+    write('                     F I N A L  S C O R E S     '),nl,
+    write('               ---------------------------------'),nl,
+    write('                        ORCS: '), write(O),nl,
+    write('                        GOBLINS: '), write(G),nl,
+    write('                        ZOMBIES: '), write(Z),nl,
+    write('               ---------------------------------'),nl,
+    nl,nl,nl.
