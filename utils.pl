@@ -18,3 +18,6 @@ replace([H|T], I, X, [H|R]):-
 replace(L, _, _, L).
 
 
+is_empty([]).
+
+

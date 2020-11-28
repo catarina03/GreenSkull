@@ -55,7 +55,7 @@ valid_move(Player, RowPiece, ColumnPiece, Row, Column, GameState, NewGameState):
     R is abs(RowPiece-Row),
     C is abs(ColumnPiece-Column), 
     R=<2,C=<2, 
-    check_surroundings(RowPiece, ColumnPiece, Row, Column, GameState, NewGameState).
+    check_surroundings(RowPiece, ColumnPiece, Row, Column, GameState, NewGameState, Player).
 
 % 
 check_adjacent_movement(RowPiece, ColumnPiece, Row, Column) :-
@@ -75,16 +75,18 @@ check_adjacent_movement(RowPiece, ColumnPiece, Row, Column) :-
 % 7,5;  6,4;  6,3;  7,3;  8,4;  8,5
 
 % Verifies if destination cell is adjacent, if so it changes the board
-check_surroundings(RowPiece, ColumnPiece, Row, Column, GameState, NewGameState):-
+check_surroundings(RowPiece, ColumnPiece, Row, Column, GameState, NewGameState, Player):-
     R is abs(RowPiece-Row),
     C is abs(ColumnPiece-Column),
     R=<1, C=<1,
     check_adjacent_movement(RowPiece, ColumnPiece, Row, Column),
-    change_board(RowPiece,ColumnPiece, Row, Column, GameState,NewGameState).
+    change_board(RowPiece,ColumnPiece, Row, Column, GameState,NewGameState),
+    set_next_player(Player, NextPlayer),
+    move(GameState,NewPlayer,NewGameState).
 
 % If player wants to eat something
 % Checks if what's between current position and destination is something edible (not white space)
-check_surroundings(RowPiece, ColumnPiece, Row, Column, GameState, NewGameState):-
+check_surroundings(RowPiece, ColumnPiece, Row, Column, GameState, NewerGameState, Player):-
     RowTest is (Row-RowPiece)/2, is_int(RowTest), R is ceiling(RowTest),
     ColumnTest is (Column-ColumnPiece)/2, is_int(ColumnTest), C is round(ColumnTest), 
     RowFood is RowPiece + R, ColumnFood is ColumnPiece + C,
@@ -93,12 +95,54 @@ check_surroundings(RowPiece, ColumnPiece, Row, Column, GameState, NewGameState):
     Elem \== e, !,
     % chama change board diferente que substitui a peça do meio (a "comida") por um white space tambem
     change_board(RowPiece, ColumnPiece, Row, Column, RowFood, ColumnFood, GameState, NewGameState),
-
-    nl,nl,print_board(NewGameState,0), nl,
-
     get_move_eat(Row, Column, AllPlaysList, NewGameState),
+    eats_again(Row, Column, RowInput, ColumnInput, AllPlaysList, NewGameState, NewerGameState).
 
-    input_play.
+
+eats_again(RowPiece, ColumnPiece, Row, Column, AllPlaysList, GameState, NewGameState) :-
+    length(AllPlaysList, Length),
+    Length == 0,
+    write('eats_again 0 length - Game State: '), write(GameState), nl, 
+    write('eats_again 0 length - New Game State: '), write(NewGameState), nl,
+    NewGameState = GameState.
+
+eats_again(RowPiece, ColumnPiece, RowInput, ColumnInput, AllPlaysList, GameState, NewGameState) :-
+    write('LISTA DE JOGADAS POSSIVEIS'), write(AllPlaysList), nl,
+    \+ is_empty(AllPlaysList),
+    repeat,
+    % gets play, checks play, changes board
+
+    display_board(GameState),
+    
+    input_play('You can jump again, if you want to finish your play here insert 0, 0.', RowInput, ColumnInput),
+    write('Start: ['), write(RowPiece), write('/'), write(ColumnPiece), write(']'), nl,
+    write('End: ['), write(RowInput), write('/'), write(ColumnInput), write(']'), nl,
+    write('GAME STATE: '), write(GameState), nl,
+    write('NEW GAME STATE: '), write(NewGameState), nl,
+    validate_play(RowPiece, ColumnPiece, [RowInput, ColumnInput], AllPlaysList, GameState, NewGameState),
+
+    write('BOARD AFTER PLAYING GOING TO '), write([RowInput, ColumnInput]), nl,nl,
+    display_board(NewGameState), nl, nl,
+    get_move_eat(RowInput, ColumnInput, AnotherPlaysList, NewGameState),
+    eats_again(RowInput, ColumnInput, RowNew, ColumnNew, AnotherPlaysList, NewGameState, NewerGameState)
+    .
+
+
+validate_play(_, _, [0, 0] , _, GameState, NewGameState) :- 
+    !,
+    write('Player stops here.'), nl, NewGameState = GameState.
+
+validate_play(RowPiece, ColumnPiece, [RowInput, ColumnInput], AllPlaysList, GameState, NewGameState) :-
+    write('All plays list: '), write(AllPlaysList), nl,
+    write('Member: '), write([RowInput, ColumnInput]), nl,
+    member([RowInput, ColumnInput], AllPlaysList),
+    !,
+    RowTest is (RowInput-RowPiece)/2, is_int(RowTest), R is ceiling(RowTest),
+    ColumnTest is (ColumnInput-ColumnPiece)/2, is_int(ColumnTest), C is round(ColumnTest), 
+    RowFood is RowPiece + R, ColumnFood is ColumnPiece + C,
+    change_board(RowPiece, ColumnPiece, RowInput, ColumnInput, RowFood, ColumnFood, GameState, NewGameState).
+
+
 
 
 %----------------------------------------------------------------------------------------
@@ -168,7 +212,7 @@ change_board(RowPiece, ColumnPiece, Row, Column, RowFood, ColumnFood, GameState,
     replace(IntermidiateGameState, RowFood, FoodRow, FoodGameState),
     write('Replace: '), write(IntermidiateRow), write(' with '), write(FoodRow), nl,
     write('Game State: '), nl,
-    write(FoodGameState),
+    write(FoodGameState), nl,
     % Putting end element in end place
     replace(FoodRow, Column, ElemStart, FinalRow),
     replace(FoodGameState, Row, FinalRow, NewGameState),
@@ -218,13 +262,15 @@ change_board(RowPiece, ColumnPiece, Row, Column, RowFood, ColumnFood, GameState,
 % ColumnPiece - column of piece playing
 % AllPlaysList - list of all plays a player can make, if empty the next player takes the turn
 % GameState - Current game state
-get_move_eat(RowPiece, ColumnPiece, AllPlaysList, GameState) :-
+get_move_eat(RowPiece, ColumnPiece, L6, GameState) :-
+    write('get_move_eat list: '), write(L6), nl,
     get_move_left(RowPiece, ColumnPiece, L0, L1, GameState),
     get_move_right(RowPiece, ColumnPiece, L1, L2, GameState),
     get_move_upper_right(RowPiece, ColumnPiece, L2, L3, GameState),
     get_move_lower_left(RowPiece, ColumnPiece, L3, L4, GameState),
     get_move_upper_left(RowPiece, ColumnPiece, L4, L5, GameState),
-    get_move_lower_right(RowPiece, ColumnPiece, L5, AllPlaysList, GameState),
+    get_move_lower_right(RowPiece, ColumnPiece, L5, L6, GameState),
+    % trace,
     write('Full plays list: '), write(L6), nl.
 
 
@@ -233,6 +279,7 @@ get_move_eat(RowPiece, ColumnPiece, AllPlaysList, GameState) :-
 % Choose move eat
 % Horizontal
 get_move_left(RowPiece, ColumnPiece, PlaysList, NewPlaysList, GameState) :-
+    write('Start: '), write(RowPiece), write('/'), write(ColumnPiece), nl,
     RowEnd = RowPiece,
     ColumnEnd is ColumnPiece - 2,
     write('Destiny: '), write(RowEnd), write('/'), write(ColumnEnd), nl,
@@ -240,6 +287,7 @@ get_move_left(RowPiece, ColumnPiece, PlaysList, NewPlaysList, GameState) :-
 get_move_left(_, _, PlaysList, NewPlaysList, _) :- NewPlaysList = PlaysList.
 
 get_move_right(RowPiece, ColumnPiece, PlaysList, NewPlaysList, GameState) :-
+write('Start: '), write(RowPiece), write('/'), write(ColumnPiece), nl,
     RowEnd = RowPiece,
     ColumnEnd is ColumnPiece + 2,
     write('Destiny: '), write(RowEnd), write('/'), write(ColumnEnd), nl,
@@ -248,6 +296,7 @@ get_move_right(_, _, PlaysList, NewPlaysList, _) :- NewPlaysList = PlaysList.
 
 % Same column
 get_move_upper_right(RowPiece, ColumnPiece, PlaysList, NewPlaysList, GameState) :-
+write('Start: '), write(RowPiece), write('/'), write(ColumnPiece), nl,
     RowEnd is RowPiece - 2,
     ColumnEnd = ColumnPiece,
     write('Destiny: '), write(RowEnd), write('/'), write(ColumnEnd), nl,
@@ -255,6 +304,7 @@ get_move_upper_right(RowPiece, ColumnPiece, PlaysList, NewPlaysList, GameState) 
 get_move_upper_right(_, _, PlaysList, NewPlaysList, _) :- NewPlaysList = PlaysList.
 
 get_move_lower_left(RowPiece, ColumnPiece, PlaysList, NewPlaysList, GameState) :-
+write('Start: '), write(RowPiece), write('/'), write(ColumnPiece), nl,
     RowEnd is RowPiece + 2,
     ColumnEnd = ColumnPiece,
     write('Destiny: '), write(RowEnd), write('/'), write(ColumnEnd), nl,
@@ -263,15 +313,17 @@ get_move_lower_left(_, _, PlaysList, NewPlaysList, _) :- NewPlaysList = PlaysLis
 
 % Other 2 hypothesis
 get_move_upper_left(RowPiece, ColumnPiece, PlaysList, NewPlaysList, GameState) :-
+write('Start: '), write(RowPiece), write('/'), write(ColumnPiece), nl,
     RowEnd is RowPiece - 2,
-    ColumnEnd is ColumnPiece + 2,
+    ColumnEnd is ColumnPiece - 2,
     write('Destiny: '), write(RowEnd), write('/'), write(ColumnEnd), nl,
     get_individual_move(RowPiece, ColumnPiece, RowEnd, ColumnEnd, PlaysList, NewPlaysList, GameState).
 get_move_upper_left(_, _, PlaysList, NewPlaysList, _) :- NewPlaysList = PlaysList.
 
 get_move_lower_right(RowPiece, ColumnPiece, PlaysList, NewPlaysList, GameState) :-
+    write('Start: '), write(RowPiece), write('/'), write(ColumnPiece), nl,
     RowEnd is RowPiece + 2,
-    ColumnEnd is ColumnPiece - 2,
+    ColumnEnd is ColumnPiece + 2,
     write('Destiny: '), write(RowEnd), write('/'), write(ColumnEnd), nl,
     get_individual_move(RowPiece, ColumnPiece, RowEnd, ColumnEnd, PlaysList, NewPlaysList, GameState).
 get_move_lower_right(_, _, PlaysList, NewPlaysList, _) :- NewPlaysList = PlaysList.

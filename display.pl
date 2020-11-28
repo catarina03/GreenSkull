@@ -19,6 +19,14 @@ display_game(GameState-GreenSkull, Player) :-
     display_player_turn(Player),
     nl, nl.
 
+
+display_board(GameState) :-
+    nl,nl,print_board(GameState,0),
+    hex_code(10,C),write(C),nl,nl,
+    write('                         z o m b i e s'),nl,
+    display_column_numbers,
+    nl, nl.
+
 % Display who plays this round
 display_player_turn(o):- 
     nl, write('                     TURN TO PLAY, ORCS!').
