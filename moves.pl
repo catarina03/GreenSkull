@@ -40,15 +40,17 @@ validPiece(GameState,z,Row,Column):-
 
 
 %choose where you want to move the piece and sees if is valid----------------------------
-choose_move(Player, GameState, RowPiece, ColumnPiece,Row,Column):-
+move_human_piece(GameState-[PO,PG,PZ]-Player,RowPiece-ColumnPiece,NewGameState-[PO1,PG1,PZ1]):-
     repeat,
-    input_play('  Where to:',Row,Column).
+    input_play('  Where to:',Row,Column),
+    Move=RowPiece-ColumnPiece-Row-Column,
+    move(GameState-[PO,PG,PZ]-Player,Move,NewGameState-[PO1,PG1,PZ1]).
    
 
 %
 %RowPiece - piece we're moving
 %Row - row we're going to
-valid_move(Player, RowPiece, ColumnPiece, Row, Column, GameState, NewGameState-Elem):-
+valid_move(_, RowPiece, ColumnPiece, Row, Column, GameState, NewGameState-Elem):-
     nth1(Row,GameState,L),
     nth1(Column,L,ElemEnd),
     ElemEnd==e,
@@ -144,7 +146,7 @@ change_board(RowPiece, ColumnPiece, Row, Column, RowFood, ColumnFood, GameState,
     nth1(ColumnPiece,ResultRowStart,ElemStart),
     % Value of food piece 
     nth1(RowFood,GameState,ResultRowFood),
-    nth1(ColumnFood, ResultRowFood,ElemFood),
+    nth1(ColumnFood, ResultRowFood,_),
     % Value of place piece is jumping to - end
     nth1(Row,GameState,ResultRowEnd),
     nth1(Column, ResultRowEnd,ElemEnd),
@@ -168,7 +170,7 @@ change_board(RowPiece, ColumnPiece, Row, Column, RowFood, ColumnFood, GameState,
     nth1(ColumnPiece,ResultRowStart,ElemStart),
     % Value of food piece 
     nth1(RowFood,GameState,ResultRowFood),
-    nth1(ColumnFood, ResultRowFood,ElemFood),
+    nth1(ColumnFood, ResultRowFood,_),
     % Value of place piece is jumping to - end
     nth1(Row,GameState,ResultRowEnd),
     nth1(Column, ResultRowEnd,ElemEnd),

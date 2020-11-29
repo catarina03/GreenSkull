@@ -34,7 +34,7 @@ display_green_skull(g) :-
     nl, write('                 GOBLINS HAVE THE GREEN SKULL!').
 
 % Prints the full board
-print_board([],N).
+print_board([],_).
 print_board([H|T],N) :- 
     hex_code(N,C),write(C),nl,
     space(N,S),write(S),

@@ -66,7 +66,7 @@ orcs_in_line([E|R],N):-
     orcs_in_line(R,N1),
     N is N1+1.
 
-orcs_in_line([E|R],N):-
+orcs_in_line([_|R],N):-
     orcs_in_line(R,N).
 
 %sees how many goblins are in their line
@@ -76,7 +76,7 @@ goblins_in_line([E|R],N):-
     goblins_in_line(R,N1),
     N is N1+1.
 
-goblins_in_line([E|R],N):-
+goblins_in_line([_|R],N):-
     goblins_in_line(R,N).
 
 %sees how many zombies are in their line
@@ -86,5 +86,5 @@ zombies_in_line([E|R],N):-
     zombies_in_line(R,N1),
     N is N1+1.
 
-zombies_in_line([E|R],N):-
+zombies_in_line([_|R],N):-
     zombies_in_line(R,N).
