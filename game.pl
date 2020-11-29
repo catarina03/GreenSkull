@@ -50,17 +50,18 @@ play_round(GameState-[PO,PG,PZ], Player, GreenSkull):-
     next(Player,NewGameState-[PO1,PG1,PZ1]).
     
 next(Player,GameState-[PO1,PG1,PZ1]):-
-    \+ is_over(GameState),!,
+    \+ game_over(GameState-[PO1,PG1,PZ1],Winner),!,
     display_scores(PO1-PG1-PZ1),
     set_next_player(Player, NextPlayer),
     play_round(GameState-[PO1,PG1,PZ1], NextPlayer, GreenSkull).
 
-next(_,GameState-[PO,PG,PZ]):-
+game_over(GameState-[PO,PG,ZO],Winner):-
+    is_over(GameState),!,
     display_game_over,
     final_scores(GameState-[PO,PG,PZ],[PO1,PG1,PZ1]),
     display_final_scores(PO1-PG1-PZ1),
-    get_winner(PO1-PG1-PZ1,Player),
-    display_winner(Player).
+    get_winner(PO1-PG1-PZ1,Winner),
+    display_winner(Winner).
 
 % Checks if game is over 
 is_over(GameState) :- 

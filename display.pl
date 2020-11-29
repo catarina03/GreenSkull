@@ -143,7 +143,7 @@ display_winner(z):-
     write('                   W I N N E R:  Z O M B I E S     '),nl,
     nl,nl,nl.
 
-display_winner():-
+display_winner(t):-
     write('                       A L L  W I N N E R S     '),nl,
     nl,nl,nl.
 
