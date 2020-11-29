@@ -3,9 +3,9 @@
 
 
 % Player makes a move
-move(GameState-[PO,PG,PZ]-Player,RowPiece-ColumnPiece-Row-Column, NewGameState-[PO1,PG1,PZ1]-ListEat):- 
+move(GameState-[PO,PG,PZ]-Player,RowPiece-ColumnPiece-Row-Column-MoveType, NewGameState-[PO1,PG1,PZ1]-ListEat):- 
     valid_moves(GameState, Player-RowPiece-ColumnPiece, LAM-LEM),
-    is_valid_move(GameState, LAM-LEM, [Row, Column]),
+    is_valid_move(GameState, LAM-LEM, [Row, Column], MoveType),
     change_board(GameState, RowPiece-ColumnPiece, Row-Column, NewGameState, ElemEaten),
     change_score([PO,PG,PZ]-Player-ElemEaten,[PO1,PG1,PZ1]),
     get_move_eat(Row, Column, ListEat, NewGameState).
@@ -41,13 +41,17 @@ play_again(GameState-[PO,PG,PZ], [], _, FinalGameState-[POF,PGF,PZ]) :-
     FinalGameState = GameState,
     [POF,PGF,PZ] = [PO,PG,PZ].
 
-play_again(GameState-[PO,PG,PZ], ListEat, Player-[Row, Column], FinalGameState-[POF,PGF,PZ]) :-
+play_again(GameState-[PO,PG,PZ], ListEat, Player-[Row, Column]-e, FinalGameState-[POF,PGF,PZ]) :-
     input_message('Play again? [y/n]', Response),
-    checks_play_again(GameState-[PO,PG,PZ], ListEat, Player-[Row, Column], FinalGameState-[POF,PGF,PZ], Response).
+    checks_play_again(GameState-[PO,PG,PZ], ListEat, Player-[Row, Column]-e, FinalGameState-[POF,PGF,PZ], Response).
+
+play_again(GameState-[PO,PG,PZ], _, _, FinalGameState-[POF,PGF,PZ]) :-
+    FinalGameState = GameState,
+    [POF,PGF,PZ] = [PO,PG,PZ].
 
 
 
-checks_play_again(GameState-[PO,PG,PZ], ListEat, Player-[Row, Column], FinalGameState-[POF,PGF,PZ], y) :-
+checks_play_again(GameState-[PO,PG,PZ], ListEat, Player-[Row, Column]-e, FinalGameState-[POF,PGF,PZ], y) :-
     input_play('Where to go:',RowInput,ColumnInput),
     is_member([RowInput, ColumnInput], ListEat),
     !, 
@@ -55,7 +59,7 @@ checks_play_again(GameState-[PO,PG,PZ], ListEat, Player-[Row, Column], FinalGame
     change_board(GameState, Row-Column, RowInput-ColumnInput, NewGameState, ElemEaten),
     change_score([PO,PG,PZ]-Player-ElemEaten,[PO1,PG1,PZ1]),
     get_move_eat(RowInput, ColumnInput, NewListEat, NewGameState),
-    play_again(NewGameState-[PO1,PG1,PZ1], NewListEat, Player-[RowInput, ColumnInput], FinalGameState-[POF,PGF,PZ]).
+    play_again(NewGameState-[PO1,PG1,PZ1], NewListEat, Player-[RowInput, ColumnInput]-e, FinalGameState-[POF,PGF,PZ]).
 
 
 checks_play_again(GameState-[PO,PG,PZ], _, _, FinalGameState-[POF,PGF,PZ], n) :-
@@ -79,17 +83,16 @@ valid_moves(GameState, _-Row-Column, ListAdjacentMoves-ListEatMoves) :-
 move_human_piece(GameState-[PO,PG,PZ]-Player,RowPiece-ColumnPiece,FinalGameState-[POF,PGF,PZF]):-
     repeat,
     input_play('  Where to:',Row,Column),
-    Move=RowPiece-ColumnPiece-Row-Column,
-    move(GameState-[PO,PG,PZ]-Player,Move,NewGameState-[PO1,PG1,PZ1]-ListEat),
-    play_again(NewGameState-[PO1,PG1,PZ1], ListEat, Player-[Row, Column], FinalGameState-[POF,PGF,PZF]).
+    move(GameState-[PO,PG,PZ]-Player, RowPiece-ColumnPiece-Row-Column-MoveType, NewGameState-[PO1,PG1,PZ1]-ListEat),
+    play_again(NewGameState-[PO1,PG1,PZ1], ListEat, Player-[Row, Column]-MoveType, FinalGameState-[POF,PGF,PZF]).
 
 
 
-is_valid_move(_, LAM-_, Position) :-
+is_valid_move(_, LAM-_, Position, a) :-
     is_member(Position, LAM).
 
 % Only this one changes ElemEaten
-is_valid_move(_, _-LEM, Position) :-
+is_valid_move(_, _-LEM, Position, e) :-
     is_member(Position, LEM).
 
 % ==================================================================
@@ -111,20 +114,6 @@ change_board(GameState, RowPiece-ColumnPiece, Row-Column, NewGameState, ElemEate
     RowFood is RowPiece + R, 
     ColumnFood is ColumnPiece + C,
     change_board_aux(RowPiece, ColumnPiece, Row, Column, RowFood, ColumnFood, GameState, NewGameState, ElemEaten).
-
-/*
-% Verifies if destination cell is adjacent, if so it changes the board
-check_surroundings(RowPiece, ColumnPiece, Row, Column, GameState,NewGameState-Elem):-
-    R is abs(RowPiece-Row),
-    C is abs(ColumnPiece-Column),
-    R=<1, C=<1,
-    check_adjacent_movement(RowPiece, ColumnPiece, Row, Column),
-    change_board(RowPiece,ColumnPiece, Row, Column, GameState,NewGameState),
-    Elem=e.
-
-% If player wants to eat something
-% Checks if what's between current position and destination is something edible (not white space)
-check_surroundings(RowPiece, ColumnPiece, Row, Column, GameState, NewGameState-Elem):- */
 
 
 % --------------------------------------------------------------------------------------
