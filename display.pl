@@ -60,7 +60,7 @@ display_column_numbers:-
 % Displays game over message
 display_game_over :- 
     nl, 
-    write('                        GAME OVER').
+    write('                        G A M E  O V E R'),nl,nl.
 
 %Display game menus:
 display_menu(C):-
@@ -128,5 +128,35 @@ display_final_scores(O-G-Z):-
     write('                        ORCS: '), write(O),nl,
     write('                        GOBLINS: '), write(G),nl,
     write('                        ZOMBIES: '), write(Z),nl,
-    write('               ---------------------------------'),nl,
+    write('               ---------------------------------'),nl.
+   
+
+display_winner(o):-
+    write('                     W I N N E R:  O R C S     '),nl,
     nl,nl,nl.
+
+display_winner(g):-
+    write('                   W I N N E R:  G O B L I N S     '),nl,
+    nl,nl,nl.
+
+display_winner(z):-
+    write('                   W I N N E R:  Z O M B I E S     '),nl,
+    nl,nl,nl.
+
+display_winner():-
+    write('                       A L L  W I N N E R S     '),nl,
+    nl,nl,nl.
+
+display_winner(o-g):-
+    write('            W I N N E R:  O R C S  &  G O B L I N S     '),nl,
+    nl,nl,nl.
+
+display_winner(o-z):-
+    write('            W I N N E R:  O R C S  &  Z O M B I E S     '),nl,
+    nl,nl,nl.
+
+
+display_winner(g-z):-
+    write('          W I N N E R:  G O B L I N S  &  Z O M B I E S     '),nl,
+    nl,nl,nl.
+

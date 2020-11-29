@@ -50,56 +50,51 @@ play_round(GameState-[PO,PG,PZ], Player, GreenSkull):-
     next(Player,NewGameState-[PO1,PG1,PZ1]).
     
 next(Player,GameState-[PO1,PG1,PZ1]):-
-    write('HELLO'),
-    \+ is_over(NewGameState),!,
+    \+ is_over(GameState),!,
     display_scores(PO1-PG1-PZ1),
     set_next_player(Player, NextPlayer),
-    play_round(NewGameState-[PO1,PG1,PZ1], NextPlayer, GreenSkull).
+    play_round(GameState-[PO1,PG1,PZ1], NextPlayer, GreenSkull).
 
 next(_,GameState-[PO,PG,PZ]):-
-    write('HERE'),
     display_game_over,
     final_scores(GameState-[PO,PG,PZ],[PO1,PG1,PZ1]),
-    display_final_scores(PO1-PG1-PZ1).
+    display_final_scores(PO1-PG1-PZ1),
+    get_winner(PO1-PG1-PZ1,Player),
+    display_winner(Player).
 
 % Checks if game is over 
 is_over(GameState) :- 
-   pieces_out(GameState,1),
-   write('pieces out').
+    pieces_out(GameState).
 
 is_over(GameState):-
-    color_in_line(GameState),
-    write('color in line').
+    color_in_line(GameState).
 
 %Verifies if there's any player out
-pieces_out(GameState,11).
 %verifica se Z está em jogo
-pieces_out(GameState,N):-
-    N=<10,
-    nth1(N,GameState,L),
-    \+ member(z,L),
-    N1 is N+1,
-    pieces_out(GameState,N1).
+pieces_out(GameState) :- 
+    allElemetsOut(GameState,z,1).
 
 %verifica se O está em jogo
-pieces_out(GameState,N) :- 
-    N=<10,
-    nth1(N,GameState,L),
-    \+ member(o,L),
-    N1 is N+1,
-    pieces_out(GameState,N1).
+pieces_out(GameState) :- 
+    allElemetsOut(GameState,o,1).
 
 %verifica se G está em jogo
-pieces_out(GameState,N) :- 
+pieces_out(GameState) :- 
+    allElemetsOut(GameState,g,1).
+
+
+allElemetsOut(_,_,11).
+allElemetsOut(GameState,Player,N):-
     N=<10,
     nth1(N,GameState,L),
-    \+member(g,L),
+    \+ member(Player,L),
     N1 is N+1,
-    pieces_out(GameState,N1).
+    allElemetsOut(GameState,Player,N1).
+
 
 
 %verifica se todas as peças Z estão na ultima linha.
-color_in_line(GameState) :- 
+color_in_line(GameState) :-
     zombies_spread(GameState,1).
 
 zombies_spread(GameState,Indice):-
@@ -161,3 +156,45 @@ get_right_diagonal(_,_,11,[]).
 % set_next_player(Player, NextPlayer)
 set_next_player(o, g).
 set_next_player(g, o).
+
+%Winner is Orcs
+get_winner(PO1-PG1-PZ1,Player):-
+    PO1>PG1,
+    PO1>PZ1,
+    Player=o.
+
+%Winner is Goblins
+get_winner(PO1-PG1-PZ1,Player):-
+    PG1>PO1,
+    PG1>PZ1,
+    Player=g.
+
+%Winner is Zombies
+get_winner(PO1-PG1-PZ1,Player):-
+    PZ1>PG1,
+    PZ1>PO1,
+    Player=z.
+
+%No winners
+get_winner(PO1-PG1-PZ1,Player):-
+    PO1==PG1,
+    PZ1==PO1,
+    Player=t.
+
+%Winners are Orcs and Globins
+get_winner(PO1-PG1-PZ1,Player):-
+    PO1==PG1,
+    PO1>PZ1,
+    Player=o-g.
+
+%Winners are Orcs and Zombies
+get_winner(PO1-PG1-PZ1,Player):-
+    PO1==PZ1,
+    PO1>PG1,
+    Player=o-z.
+
+%Winners are Zombies and Globins
+get_winner(PO1-PG1-PZ1,Player):-
+    PZ1==PG1,
+    PZ1>PO1,
+    Player=g-z.
