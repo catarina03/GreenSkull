@@ -38,4 +38,3 @@ input_message(Message,Response) :-
     write(Message),nl, read(Response), nl.
 
 
-

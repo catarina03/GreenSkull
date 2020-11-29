@@ -1,17 +1,25 @@
-# GreenSkull
+# **GreenSkull**
 
-## Identificação:
+## **Identificação:**
 * **Grupo**: Green Skull 4
 * **Turma prática**: 6
 * **Elementos**: 
     - Catarina Justo dos Santos Fernandes (up201806610)
     - Jéssica Mireie Fernandes Nascimento (up201806723)
 
-## Descrição do jogo:
+## **Instalação e Execução:**
+    Para iniciar o jogo, será necessário iniciar o sicstus e fazer consult('game.pl').
+    Após consultar o ficheiro, basta colocar na linha de comandos o seguinte predicado: play.
+    Após fazer o play, irá aparecer um menu onde poderá escolher entre ver instruções ou jogar, ao escolher jogar, poderá escolher o modo de jogo.
 
-- 2 jogadores  
-- Inicialmente os Goblins (g) têm a Green Skull  
-- Orcs (o) jogam primeiro.  
+## **Descrição do jogo:**
+- Jogo composto por 2 jogadores: um a representar os Orcs e o outro, os Goblins.
+- As peças **o** representam os Orcs.
+- As peças **g** representam os Goblins.
+- As peças **z** representam os Zombies, que serão jogadas pelo o jogador com a Green Skull.
+- Inicialmente o jogador com os Goblins é que tem a Green Skull na sua posse.
+- Consoante as jogadas, a posse da Green Skull porderá ser mudada.
+- O jogador com os Orcs jogam primeiro.  
 
 **Objetivo**  
 Fazer chegar as peças ao outro lado do tabuleiro, saltando por cima do máximo de inimigos possível e manipulando os zombies para atrapalhar o adversário.
@@ -28,7 +36,7 @@ O jogo acaba quando:
 - todas as peças em jogo de qualquer cor (zombies também) estão a tocar na borda da sua cor 
 
 ou  
-- quando todas as peças de uma cor foram capturadas
+- todas as peças de uma cor forem capturadas.
 
 
 **Pontuação**
@@ -41,12 +49,12 @@ Os zombies pontuam da mesma maneira. A espécie que tiver mais pontos ganha, mes
 * [Página oficial do jogo](https://nestorgames.com/#greenskull_detail)
 * [Livro de regras](https://nestorgames.com/rulebooks/GREENSKULL_EN.pdf)
 
-## Representação interna do estado do jogo:
+## **Representação interna do estado do jogo:**
 Escolhemos representar o estado do jogo através de um predicado composto por 3 elementos, GameState (que representa o estado atual do tabuleiro), Player (que reprenta o jogador que pode jogar naquela ronda) e GreenSkull (que representa o jogador que, naquele momento, tem a Green Skull em sua posse).  
 
 **GameState** é uma lista de listas com diferentes átomos para as peças, codificadas para representar as diferentes espécies.  
 
-![](images/representation.png)  
+![](images/representation.PNG)  
 A representação de cada especie é feita da seguinte maneira:
 * Globins com a letra G;
 * Orcs com a letra O;
@@ -54,23 +62,34 @@ A representação de cada especie é feita da seguinte maneira:
 
 **Player** e **GreenSkull** são representados por um átomo que pode ser **g** ou **o**.  
 
-## Visualização do estado de jogo:
+## **Visualização do estado de jogo:**
 O predicado de visualização do estado do jogo é **display_game** e recebe dois argumentos, um argumento composto **GameState-GreenSkull** e um argumento **Player**.  
 O predicado começa por chamar o predicado **print_board**, que escreve na consola o tabuleiro, linha a linha (predicado **print_row**) com a respetiva numeração da linha e formatação (predicado **space**).  
 Depois imprime a númeração das colunas (predicado **display_column_numbers**) e de quem é a vez de jogar, juntamente com quem tem a Green Skull (predicados **display_green_skull** e **display_player_turn** respetivamente).
 
-### **Estado inicial do jogo:**  
-
+# TO DO atualizar imagens.
+**Estado inicial do jogo:**  
 <img src="./images/initalBoard.png" alt="initial board" width="300" height="300"/> 
 <img src="./images/initialBoardSicstus.png" alt="initial board in console" width="300" height="300"/> 
 
-### **Estado intermédio do jogo:**  
+## **Lista de Jogadas Válidas:**
+Obtenção de lista com jogadas possíveis. O predicado deve chamar-se ​valid_moves(+GameState, +Player, -ListOfMoves)​.
 
-<img src="./images/intermediateBoard.png" alt="intermediate board" width="300" height="300"/> 
-<img src="./images/intertermediateBoardSicstus.png" alt="intermediate board in console" width="300" height="300"/>  
+## **Execução de Jogadas:**
+Validação e execução de uma jogada, obtendo o novo estado do jogo. O predicado deve chamar-se ​move(+GameState,+Move,-NewGameState)​.
+ 
+## **Final do Jogo:** 
+Na passagem à próxima jogada através do predicado **next**, verificamos se chegamos ao fim do jogo através do predicado **game_over**,que só retornará ao next caso não tenhamos chegado ao fim. Para a verificação usamos o **is_over**, que percorre o GameState a fim de encontrar uma situação de final de jogo. Caso seja encontrado, prosseguirá para **final_scores**, que retorna as pontuação final do jogo, consoante o ultimo estado e seguidamente irá para o **get_winner** que retorna o vencedor consoante a pontuação final.
 
-### **Estado final do jogo:**  
+## **Avaliação do Tabuleiro: **
+Forma(s) de avaliação do estado do jogo. O predicado deve chamar-se ​value(+GameState, +Player, -Value)​.
 
-(Vítoria dos Globins)  
-<img src="./images/finalBoard.png" alt="final board" width="300" height="300"/> 
-<img src="./images/finalBoardSicstus.png" alt="final board in console" width="300" height="300"/>
+## **Jogada do Computador:**
+Escolha da jogada a efetuar pelo computador, dependendo do nível de dificuldade. O predicado deve chamar-se choose_move(+GameState, +Player, +Level, -Move)​.
+
+## **Conclusões:**
+Conclusões do trabalho, incluindo limitações do trabalho desenvolvido ​knownissues​), assim como possíveis melhorias identificadas (​roadmap​).
+(até 250 palavras)
+
+## **Bibliografia:**
+    Listagem de livros, artigos,páginas Web e outros recursos usados durante o desenvolvimento do trabalho

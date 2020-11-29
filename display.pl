@@ -13,7 +13,7 @@
 display_game(GameState-GreenSkull, Player) :-
     nl,nl,print_board(GameState,0),
     hex_code(10,C),write(C),nl,nl,
-    write('                         z o m b i e s'),nl,
+    write('                          z o m b i e s'),nl,
     display_column_numbers,
     display_green_skull(GreenSkull), 
     display_player_turn(Player),
@@ -42,7 +42,7 @@ display_green_skull(g) :-
     nl, write('                 GOBLINS HAVE THE GREEN SKULL!').
 
 % Prints the full board
-print_board([],N).
+print_board([],_).
 print_board([H|T],N) :- 
     hex_code(N,C),write(C),nl,
     space(N,S),write(S),
@@ -68,4 +68,104 @@ display_column_numbers:-
 % Displays game over message
 display_game_over :- 
     nl, 
-    write('                       GAME OVER').
+    write('                        G A M E  O V E R'),nl,nl.
+
+%Display game menus:
+display_menu(C):-
+    write('                  |   G R E E N  S K U L L  |'),nl,
+    write('               ---------------------------------'),nl,
+    write('                  |     1. Instructions     |'),nl,
+    write('                  |     2. Play             |'),nl,
+    write('               ---------------------------------'),nl,
+    write('                  |                         |'),nl,
+    write('               Option: '),read(C),nl,nl.
+
+display_instructions:-
+    write('                  | I N S T R U C T I O N S |'),nl,
+    write('               ---------------------------------'),nl,
+    write('                  | Try to get your pieces  |'),nl,
+    write('                  | across the field while  |'),nl,
+    write('                  | eating as many enimies  |'),nl,
+    write('                  | as you can!             |'),nl,
+    write('                  |                         |'),nl,
+    write('                  | Whoever holds the Green |'),nl,
+    write('                  | Skull, is in charge of  |'),nl,
+    write('                  | the Zombienation!       |'),nl,
+    write('               ---------------------------------'),nl,
+    write('                  |                         |'),nl,nl,nl.
+
+display_play(C):-
+    write('                  |         P L A Y         |'),nl,
+    write('               ---------------------------------'),nl,
+    write('                  |     1. Human VS Human   |'),nl,
+    write('                  |     2. Human Starts     |'),nl,
+    write('                  |     3. Pc Starts        |'),nl,
+    write('                  |     4. Pc VS Pc         |'),nl,
+    write('               ---------------------------------'),nl,
+    write('                  |                         |'),nl,nl,
+    write('                Option: '),read(C),nl,nl.
+
+display_play_mode(1):-
+    write('                   H U M A N   VS   H U M A N   '),nl,
+    write('               ---------------------------------'),nl,nl.
+
+display_play_mode(2):-
+    write('                      H U M A N   VS   P C      '),nl,
+    write('               ---------------------------------'),nl,nl.
+
+display_play_mode(3):-
+    write('                      P C   VS   H U M A N      '),nl,
+    write('               ---------------------------------'),nl,nl.
+
+display_play_mode(4):-
+    write('                         P C   VS   P C         '),nl,
+    write('               ---------------------------------'),nl,nl.
+        
+display_scores(O-G-Z):-
+    nl,nl,
+    write('                          S C O R E S       '),nl,
+    write('               ---------------------------------'),nl,
+    write('                        ORCS: '), write(O),nl,
+    write('                        GOBLINS: '), write(G),nl,
+    write('                        ZOMBIES: '), write(Z),nl,
+    write('               ---------------------------------'),nl,
+    nl,nl.
+
+display_final_scores(O-G-Z):-
+    write('                     F I N A L  S C O R E S     '),nl,
+    write('               ---------------------------------'),nl,
+    write('                        ORCS: '), write(O),nl,
+    write('                        GOBLINS: '), write(G),nl,
+    write('                        ZOMBIES: '), write(Z),nl,
+    write('               ---------------------------------'),nl.
+   
+
+display_winner(o):-
+    write('                     W I N N E R:  O R C S     '),nl,
+    nl,nl,nl.
+
+display_winner(g):-
+    write('                   W I N N E R:  G O B L I N S     '),nl,
+    nl,nl,nl.
+
+display_winner(z):-
+    write('                   W I N N E R:  Z O M B I E S     '),nl,
+    nl,nl,nl.
+
+display_winner(t):-
+    write('                       A L L  W I N N E R S     '),nl,
+    nl,nl,nl.
+
+display_winner(o-g):-
+    write('            W I N N E R:  O R C S  &  G O B L I N S     '),nl,
+    nl,nl,nl.
+
+display_winner(o-z):-
+    write('            W I N N E R:  O R C S  &  Z O M B I E S     '),nl,
+    nl,nl,nl.
+
+
+display_winner(g-z):-
+    write('          W I N N E R:  G O B L I N S  &  Z O M B I E S     '),nl,
+    nl,nl,nl.
+

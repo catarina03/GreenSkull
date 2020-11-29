@@ -1,26 +1,22 @@
 :-include('utils.pl').
-
+:-include('scores.pl').
 
 
 % Player makes a move
-move(GameState,Player,FinalGameState):- 
-    choose_piece(GameState,Player,RowPiece,ColumnPiece),
+move(GameState-[PO,PG,PZ]-Player,RowPiece-ColumnPiece-Row-Column, NewGameState-[PO1,PG1,PZ1]-ListEat):- 
     valid_moves(GameState, Player-RowPiece-ColumnPiece, LAM-LEM),
-    % TO DO - Return list ElemEaten to update the score
-    choose_move(GameState, LAM-LEM, [Row, Column], ElemEaten),
-    change_board(GameState, RowPiece-ColumnPiece, Row-Column, NewGameState),
-    get_move_eat(Row, Column, ListEat, NewGameState),
-    play_again(NewGameState, ListEat, Player-[Row, Column], FinalGameState).
+    is_valid_move(GameState, LAM-LEM, [Row, Column]),
+    change_board(GameState, RowPiece-ColumnPiece, Row-Column, NewGameState, ElemEaten),
+    change_score([PO,PG,PZ]-Player-ElemEaten,[PO1,PG1,PZ1]),
+    get_move_eat(Row, Column, ListEat, NewGameState).
 
     
 
 % Choose piece you want to move and sees if is valid-------------------------------------
 choose_piece(GameState,Player,Row,Column):-
     repeat,
-    input_play('Choose piece:',Row,Column),
-    valid_piece(GameState,Player,Row,Column),
-    !, 
-    write('Valid!'),nl.
+    input_play('  Which piece:',Row,Column),
+    valid_piece(GameState,Player,Row,Column),!.
 
 
 % Sees if the piece chosen is valid
@@ -41,32 +37,35 @@ valid_piece(GameState,z,Row,Column):-
 
 % --------------------------------------------------------------------------------
 
-play_again(GameState, [], Player-[Row, Column], FinalGameState) :-
-    FinalGameState = GameState.
+play_again(GameState-[PO,PG,PZ], [], _, FinalGameState-[POF,PGF,PZ]) :-
+    FinalGameState = GameState,
+    [POF,PGF,PZ] = [PO,PG,PZ].
 
-play_again(GameState, ListEat, Player-[Row, Column], FinalGameState) :-
+play_again(GameState-[PO,PG,PZ], ListEat, Player-[Row, Column], FinalGameState-[POF,PGF,PZ]) :-
     input_message('Play again? [y/n]', Response),
-    checks_play_again(GameState, ListEat, Player-[Row, Column], FinalGameState, Response).
+    checks_play_again(GameState-[PO,PG,PZ], ListEat, Player-[Row, Column], FinalGameState-[POF,PGF,PZ], Response).
 
 
 
-checks_play_again(GameState, ListEat, Player-[Row, Column], FinalGameState, y) :-
+checks_play_again(GameState-[PO,PG,PZ], ListEat, Player-[Row, Column], FinalGameState-[POF,PGF,PZ], y) :-
     input_play('Where to go:',RowInput,ColumnInput),
     is_member([RowInput, ColumnInput], ListEat),
     !, 
     write('Valid!'), nl,
-    change_board(GameState, Row-Column, RowInput-ColumnInput, NewGameState),
+    change_board(GameState, Row-Column, RowInput-ColumnInput, NewGameState, ElemEaten),
+    change_score([PO,PG,PZ]-Player-ElemEaten,[PO1,PG1,PZ1]),
     get_move_eat(RowInput, ColumnInput, NewListEat, NewGameState),
-    play_again(NewGameState, NewListEat, Player-[RowInput, ColumnInput], FinalGameState).
+    play_again(NewGameState-[PO1,PG1,PZ1], NewListEat, Player-[RowInput, ColumnInput], FinalGameState-[POF,PGF,PZ]).
 
 
-checks_play_again(GameState, ListEat, Player-[Row, Column], FinalGameState, n) :-
-    FinalGameState = GameState.
+checks_play_again(GameState-[PO,PG,PZ], _, _, FinalGameState-[POF,PGF,PZ], n) :-
+    FinalGameState = GameState,
+    [POF,PGF,PZ] = [PO,PG,PZ].
 
 %----------------------------------------------------------------------------------------
 
 % For a piece [Row/Column], get its valid moves
-valid_moves(GameState, Player-Row-Column, ListAdjacentMoves-ListEatMoves) :-
+valid_moves(GameState, _-Row-Column, ListAdjacentMoves-ListEatMoves) :-
     get_adjacent_move(Row, Column, ListAdjacentMoves, GameState),
     get_move_eat(Row, Column, ListEatMoves, GameState).
 
@@ -77,37 +76,56 @@ valid_moves(GameState, Player-Row-Column, ListAdjacentMoves-ListEatMoves) :-
 
 
 %choose where you want to move the piece and sees if is valid----------------------------
-choose_move(GameState, LAM-LEM, [Row, Column], ElemEaten) :-
+move_human_piece(GameState-[PO,PG,PZ]-Player,RowPiece-ColumnPiece,FinalGameState-[POF,PGF,PZF]):-
     repeat,
-    input_play('Where to go:',Row,Column),
-    is_valid_move(GameState, LAM-LEM, [Row, Column], ElemEaten), !.
+    input_play('  Where to:',Row,Column),
+    Move=RowPiece-ColumnPiece-Row-Column,
+    move(GameState-[PO,PG,PZ]-Player,Move,NewGameState-[PO1,PG1,PZ1]-ListEat),
+    play_again(NewGameState-[PO1,PG1,PZ1], ListEat, Player-[Row, Column], FinalGameState-[POF,PGF,PZF]).
 
 
-is_valid_move(GameState, LAM-LEM, Position, ElemEaten) :-
+
+is_valid_move(_, LAM-_, Position) :-
     is_member(Position, LAM).
 
 % Only this one changes ElemEaten
-is_valid_move(GameState, LAM-LEM, Position, ElemEaten) :-
+is_valid_move(_, _-LEM, Position) :-
     is_member(Position, LEM).
 
 % ==================================================================
 
 
+
 % --------------------------------------------------------------------------------------
 
-change_board(GameState, RowPiece-ColumnPiece, Row-Column, NewGameState) :-
+change_board(GameState, RowPiece-ColumnPiece, Row-Column, NewGameState, e) :-
     R is abs(RowPiece-Row),
     C is abs(ColumnPiece-Column),
     R=<1,
     C=<1,
     change_board_aux(RowPiece,ColumnPiece, Row, Column, GameState,NewGameState).
 
-change_board(GameState, RowPiece-ColumnPiece, Row-Column, NewGameState) :-
+change_board(GameState, RowPiece-ColumnPiece, Row-Column, NewGameState, ElemEaten) :-
     RowTest is (Row-RowPiece)/2, is_int(RowTest), R is ceiling(RowTest),
     ColumnTest is (Column-ColumnPiece)/2, is_int(ColumnTest), C is round(ColumnTest), 
     RowFood is RowPiece + R, 
     ColumnFood is ColumnPiece + C,
-    change_board_aux(RowPiece, ColumnPiece, Row, Column, RowFood, ColumnFood, GameState, NewGameState).
+    change_board_aux(RowPiece, ColumnPiece, Row, Column, RowFood, ColumnFood, GameState, NewGameState, ElemEaten).
+
+/*
+% Verifies if destination cell is adjacent, if so it changes the board
+check_surroundings(RowPiece, ColumnPiece, Row, Column, GameState,NewGameState-Elem):-
+    R is abs(RowPiece-Row),
+    C is abs(ColumnPiece-Column),
+    R=<1, C=<1,
+    check_adjacent_movement(RowPiece, ColumnPiece, Row, Column),
+    change_board(RowPiece,ColumnPiece, Row, Column, GameState,NewGameState),
+    Elem=e.
+
+% If player wants to eat something
+% Checks if what's between current position and destination is something edible (not white space)
+check_surroundings(RowPiece, ColumnPiece, Row, Column, GameState, NewGameState-Elem):- */
+
 
 % --------------------------------------------------------------------------------------
 
@@ -153,7 +171,7 @@ change_board_aux(RowPiece,ColumnPiece, Row, Column, GameState,NewGameState) :-
 
 
 % Falta incrementar a pontuação
-change_board_aux(RowPiece, ColumnPiece, Row, Column, RowFood, ColumnFood, GameState, NewGameState) :-
+change_board_aux(RowPiece, ColumnPiece, Row, Column, RowFood, ColumnFood, GameState, NewGameState, ElemFood) :-
     % Value of place piece is jumping from - start
     nth1(RowPiece,GameState,ResultRowStart),
     nth1(ColumnPiece,ResultRowStart,ElemStart),
@@ -177,7 +195,7 @@ change_board_aux(RowPiece, ColumnPiece, Row, Column, RowFood, ColumnFood, GameSt
 
 
 % Falta incrementar a pontuação
-change_board_aux(RowPiece, ColumnPiece, Row, Column, RowFood, ColumnFood, GameState, NewGameState) :-
+change_board_aux(RowPiece, ColumnPiece, Row, Column, RowFood, ColumnFood, GameState, NewGameState, ElemFood) :-
     % Value of place piece is jumping from - start
     nth1(RowPiece,GameState,ResultRowStart),
     nth1(ColumnPiece,ResultRowStart,ElemStart),
@@ -197,6 +215,7 @@ change_board_aux(RowPiece, ColumnPiece, Row, Column, RowFood, ColumnFood, GameSt
     % Putting end element in end place
     replace(ResultRowEnd, Column, ElemStart, FinalRowEnd),
     replace(FoodGameState, Row, FinalRowEnd, NewGameState).
+
 
 
 % ---------------------------------------------------------------------------------------------------
@@ -280,7 +299,7 @@ get_individual_move(RowPiece, ColumnPiece, RowEnd, ColumnEnd, PlaysList, NewPlay
     append(PlaysList, [[RowEnd, ColumnEnd]], NewPlaysList).
 
 
-get_individual_move(RowPiece, ColumnPiece, RowEnd, ColumnEnd, PlaysList, NewerPlaysList, GameState) :- 
+get_individual_move(_, _, _, _, PlaysList, NewerPlaysList, _) :- 
     NewerPlaysList = PlaysList.
 
 
@@ -289,7 +308,7 @@ get_individual_move(RowPiece, ColumnPiece, RowEnd, ColumnEnd, PlaysList, NewerPl
 % -----------------------------------------------------------------
 
 get_adjacent_move(RowPiece, ColumnPiece, ListOfMoves, GameState) :-
-    get_adjacent_move_left(RowPiece, ColumnPiece, L0, L1, GameState),
+    get_adjacent_move_left(RowPiece, ColumnPiece, [], L1, GameState),
     get_adjacent_move_right(RowPiece, ColumnPiece, L1, L2, GameState),
     get_adjacent_move_upper_right(RowPiece, ColumnPiece, L2, L3, GameState),
     get_adjacent_move_lower_left(RowPiece, ColumnPiece, L3, L4, GameState),
@@ -338,7 +357,7 @@ get_adjacent_move_lower_right(RowPiece, ColumnPiece, PlaysList, NewPlaysList, Ga
 get_adjacent_move_lower_right(_, _, PlaysList, NewPlaysList, _) :- NewPlaysList = PlaysList.
 
 
-get_individual_move_2(RowPiece, ColumnPiece, RowEnd, ColumnEnd, PlaysList, NewPlaysList, GameState):-
+get_individual_move_2(_, _, RowEnd, ColumnEnd, PlaysList, NewPlaysList, GameState):-
     RowEnd > 0,
     RowEnd =< 10,
     ColumnEnd > 0,
@@ -349,3 +368,4 @@ get_individual_move_2(RowPiece, ColumnPiece, RowEnd, ColumnEnd, PlaysList, NewPl
     ElemEnd == e,
     % Appends it to the list of plays - PlaysList
     append(PlaysList, [[RowEnd, ColumnEnd]], NewPlaysList).
+
