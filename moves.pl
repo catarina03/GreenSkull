@@ -3,9 +3,10 @@
 
 
 % Player makes a move
-move(GameState-[PO,PG,PZ]-Player,RowPiece-ColumnPiece-Row-Column-MoveType, NewGameState-[PO1,PG1,PZ1]-ListEat):- 
+move(GameState-[PO,PG,PZ]-Player-GreenSkull,RowPiece-ColumnPiece-Row-Column-MoveType, NewGameState-[PO1,PG1,PZ1]-ListEat-NewGreenSkull):- 
     valid_moves(GameState, Player-RowPiece-ColumnPiece, LAM-LEM),
     is_valid_move(GameState, LAM-LEM, [Row, Column], MoveType),
+    change_green_skull(MoveType, Player, GreenSkull, NewGreenSkull),
     change_board(GameState, RowPiece-ColumnPiece, Row-Column, NewGameState, ElemEaten),
     change_score([PO,PG,PZ]-Player-ElemEaten,[PO1,PG1,PZ1]),
     get_move_eat(Row, Column, ListEat, NewGameState).
@@ -76,14 +77,23 @@ valid_moves(GameState, _-Row-Column, ListAdjacentMoves-ListEatMoves) :-
 
 % ----------------------------------------------------------------------------------
 
+change_green_skull(e, Player, GreenSkull, NewGreenSkull) :-
+    Player == GreenSkull,
+    green_skull(GreenSkull, NewGreenSkull).
 
+change_green_skull(e, _, GreenSkull, NewGreenSkull) :-
+    NewGreenSkull = GreenSkull.
 
+change_green_skull(a, Player, GreenSkull, NewGreenSkull) :-
+    NewGreenSkull = GreenSkull.
+
+% --------------------------------------------------------------------------------------
 
 %choose where you want to move the piece and sees if is valid----------------------------
-move_human_piece(GameState-[PO,PG,PZ]-Player,RowPiece-ColumnPiece,FinalGameState-[POF,PGF,PZF]):-
+move_human_piece(GameState-[PO,PG,PZ]-Player-GreenSkull,RowPiece-ColumnPiece,FinalGameState-[POF,PGF,PZF]-NewGreenSkull):-
     repeat,
     input_play('  Where to:',Row,Column),
-    move(GameState-[PO,PG,PZ]-Player, RowPiece-ColumnPiece-Row-Column-MoveType, NewGameState-[PO1,PG1,PZ1]-ListEat),
+    move(GameState-[PO,PG,PZ]-Player-GreenSkull, RowPiece-ColumnPiece-Row-Column-MoveType, NewGameState-[PO1,PG1,PZ1]-ListEat-NewGreenSkull),
     play_again(NewGameState-[PO1,PG1,PZ1], ListEat, Player-[Row, Column]-MoveType, FinalGameState-[POF,PGF,PZF]).
 
 

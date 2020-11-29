@@ -47,8 +47,8 @@ initial(GameState-Player-GreenSkull) :-
 play_round(GameState-[PO,PG,PZ], Player, GreenSkull):- 
     display_game(GameState-GreenSkull,Player),
     choose_piece(GameState,Player,RowPiece,ColumnPiece),
-    move_human_piece(GameState-[PO,PG,PZ]-Player,RowPiece-ColumnPiece,NewGameState-[PO1,PG1,PZ1]),
-    next(Player,NewGameState-[PO1,PG1,PZ1],GreenSkull).
+    move_human_piece(GameState-[PO,PG,PZ]-Player-GreenSkull,RowPiece-ColumnPiece,NewGameState-[PO1,PG1,PZ1]-NewGreenSkull),
+    next(Player,NewGameState-[PO1,PG1,PZ1],NewGreenSkull).
     
 next(Player,GameState-[PO1,PG1,PZ1],GreenSkull):-
     \+ game_over(GameState-[PO1,PG1,PZ1], _),!,
