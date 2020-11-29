@@ -45,9 +45,9 @@ code(o,' O ').
 initial_board([       
              [e],         
             [e,e],         
-           [z,e,z],        
-          [z,e,e,z],         
-         [e,e,z,e,e],         
+           [e,e,z],        
+          [e,z,e,z],         
+         [e,e,e,e,e],         
         [e,e,z,z,e,e],             
        [g,e,e,z,e,z,o],       
       [g,g,e,e,z,e,o,o],        

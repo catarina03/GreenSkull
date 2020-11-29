@@ -21,3 +21,21 @@ replace(L, _, _, L).
 is_empty([]).
 
 
+
+is_member(_, []) :- fail.
+is_member(Element, [Element | _]).
+is_member(Element, [_ | Rest]) :- is_member(Element, Rest).
+
+
+
+% Reads input from user
+input_play(Message,Row,Column) :-
+    write(Message),nl,
+    write('Row: '), read(Row),
+    write('Column: '), read(Column),nl.
+
+input_message(Message,Response) :-
+    write(Message),nl, read(Response), nl.
+
+
+
