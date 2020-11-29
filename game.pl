@@ -46,7 +46,10 @@ initial(GameState-Player-GreenSkull) :-
 % Plays one round of game
 play_round(GameState-[PO,PG,PZ], Player, GreenSkull):- 
     display_game(GameState-GreenSkull,Player),
-    move(GameState-[PO,PG,PZ],Player,NewGameState-[PO1,PG1,PZ1]),
+    choose_piece(GameState,Player,RowPiece,ColumnPiece),
+    choose_move(Player,GameState,RowPiece,ColumnPiece,Row,Column),
+    Move=RowPiece-ColumnPiece-Row-Column,
+    move(GameState-[PO,PG,PZ]-Player,Move,NewGameState-[PO1,PG1,PZ1]),
     next(Player,NewGameState-[PO1,PG1,PZ1]).
     
 next(Player,GameState-[PO1,PG1,PZ1]):-
@@ -135,7 +138,6 @@ color_in_line(GameState) :-
 goblins_spread(GameState,Indice):-
     Indice<10,
     get_right_diagonal(GameState,Indice,Indice,L),
-    write(L),nl,
     \+ member(g,L),
     NewIndice is Indice+1,
     goblins_spread(GameState,NewIndice).
@@ -199,3 +201,9 @@ get_winner(PO1-PG1-PZ1,Player):-
     PZ1==PG1,
     PZ1>PO1,
     Player=g-z.
+
+%------------ P C  VS   P C -----------------------------
+% Starts the game
+pc_pc:- 
+    initial(GameState-Player-GreenSkull),
+    play_round(GameState-[0,0,0], Player, GreenSkull).

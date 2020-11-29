@@ -9,9 +9,8 @@ input_play(Message,Row,Column) :-
 
 
 % Player makes a move
-move(GameState-[PO,PG,PZ],Player,NewGameState-[PO1,PG1,PZ1]):- 
-    choose_piece(GameState,Player,RowPiece,ColumnPiece),
-    choose_move(Player,GameState,RowPiece,ColumnPiece,NewGameState-Elem),
+move(GameState-[PO,PG,PZ]-Player,RowPiece-ColumnPiece-Row-Column,NewGameState-[PO1,PG1,PZ1]):- 
+    valid_move(Player,RowPiece,ColumnPiece,Row, Column, GameState, NewGameState-Elem),
     change_score([PO,PG,PZ]-Player-Elem,[PO1,PG1,PZ1]).
     
 
@@ -41,11 +40,10 @@ validPiece(GameState,z,Row,Column):-
 
 
 %choose where you want to move the piece and sees if is valid----------------------------
-choose_move(Player, GameState, RowPiece, ColumnPiece, NewGameState-Elem):-
+choose_move(Player, GameState, RowPiece, ColumnPiece,Row,Column):-
     repeat,
-    input_play('  Where to:',Row,Column),
-    valid_move(Player,RowPiece,ColumnPiece,Row, Column, GameState, NewGameState-Elem).
-    % change_board(RowPiece,ColumnPiece, Row, Column, GameState,NewGameState).
+    input_play('  Where to:',Row,Column).
+   
 
 %
 %RowPiece - piece we're moving

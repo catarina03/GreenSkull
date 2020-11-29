@@ -114,13 +114,14 @@ display_play_mode(4):-
     write('               ---------------------------------'),nl,nl.
         
 display_scores(O-G-Z):-
+    nl,nl,
     write('                          S C O R E S       '),nl,
     write('               ---------------------------------'),nl,
     write('                        ORCS: '), write(O),nl,
     write('                        GOBLINS: '), write(G),nl,
     write('                        ZOMBIES: '), write(Z),nl,
     write('               ---------------------------------'),nl,
-    nl,nl,nl.
+    nl,nl.
 
 display_final_scores(O-G-Z):-
     write('                     F I N A L  S C O R E S     '),nl,
