@@ -127,7 +127,17 @@ display_play_mode(3):-
 display_play_mode(4):-
     write('                         P C   VS   P C         '),nl,
     write('               ---------------------------------'),nl,nl.
-       
+
+% Displays difficulty levels (only easy is implemented)       
+display_level:-
+    write('                  |         L E V E L       |'),nl,
+    write('               ---------------------------------'),nl,
+    write('                  |         1. Easy         |'),nl,
+    write('                  |         2. Hard         |'),nl,
+    write('               ---------------------------------'),nl,
+    write('                  |                         |'),nl,
+    write('               Option: ').
+
 
 
 % -------------------------------- Scores Menu ---------------------------------
@@ -189,14 +199,6 @@ display_winner(g-z):-
     write('          W I N N E R:  G O B L I N S  &  Z O M B I E S     '),nl,
     nl,nl,nl.
 
-display_level:-
-    write('                  |         L E V E L       |'),nl,
-    write('               ---------------------------------'),nl,
-    write('                  |         1. Easy         |'),nl,
-    write('                  |         2. Hard         |'),nl,
-    write('               ---------------------------------'),nl,
-    write('                  |                         |'),nl,
-    write('               Option: ').
 
 
 % ---------------------------- Display Game Over -----------------------------------

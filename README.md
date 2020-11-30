@@ -78,10 +78,16 @@ Ao acabar o jogo, é impresso um menu onde aparece Game Over, as pontuações de
 
 
 ## **Lista de Jogadas Válidas:**
-Para a obtenção das jogadas  válidas usamos o predicado **valid_moves**, que retorna 2 listas: uma para jogadas para casas adjacentes e outra para as jogadas que envolvem comer peças adversárias. Para as jogadas para casas adjacentes usamos o predicado **get_adjacent_move** que verifica as casas adjacentes disponiveis em todas as direções. Para as jogadas onde come as peças adversárias, **get_move_eat** verifica para todas as direções se é possivel comer uma ou mais peças adversárias.
+Para a obtenção das jogadas  válidas usamos o predicado **valid_moves**, que retorna 2 listas: uma para jogadas para casas adjacentes e outra para as jogadas que envolvem comer peças adversárias. Para as jogadas para casas adjacentes usamos o predicado **get_adjacent_move** que verifica as casas adjacentes disponiveis em todas as direções. Para as jogadas onde come as peças adversárias, **get_move_eat** verifica para todas as direções se é possivel comer uma ou mais peças adversárias.  
+
+<img src="./images/valid_moves.PNG" alt="valid_moves code" /> 
+<img src="./images/get_adjacent_move.PNG" alt="get_adjacent_move code" /> 
+<img src="./images/get_move_eat.PNG" alt="get_move_eat code" /> 
 
 ## **Execução de Jogadas:**
-A execução das jogadas é feita atravé do predicado **move**. Aqui vemos todas as jogadas válidas que o jogador pode fazer com com a peça escolhida e verificamos se a jogada pretendida está contida nessa lista. Caso esteja, então mudamos o estado do tabuleiro (predicado **change_board**) assim como as pontuações de cada espécie (**change_score**).
+A execução das jogadas é feita atravé do predicado **move**. Aqui vemos todas as jogadas válidas que o jogador pode fazer com com a peça escolhida e verificamos se a jogada pretendida está contida nessa lista. Caso esteja, então mudamos o estado do tabuleiro (predicado **change_board**) assim como as pontuações de cada espécie (**change_score**).  
+
+<img src="./images/move.PNG" alt="move code" /> 
  
 ## **Final do Jogo:** 
 Na passagem à próxima jogada através do predicado **next**, verificamos se chegamos ao fim do jogo através do predicado **game_over**,que só retornará ao next caso não tenhamos chegado ao fim. Para a verificação usamos o **is_over**, que percorre o GameState a fim de encontrar uma situação de final de jogo. Caso seja encontrado, prosseguirá para **final_scores**, que retorna as pontuação final do jogo, consoante o ultimo estado e seguidamente irá para o **get_winner** que retorna o vencedor consoante a pontuação final.  
@@ -90,14 +96,18 @@ Na passagem à próxima jogada através do predicado **next**, verificamos se ch
 <img src="./images/is_over.PNG" alt="is_over coded"/>   
 
 
+## **Avaliação do Tabuleiro:**
+A cada display do tabuleiro de jogo, invocamos um predicado **value** para mostrar, em tempo real, a avaliação do tabuleiro. 
+
+
 ## **Jogada do Computador:**
 A jogada do computador é feita através do predicado **choose_move**, que recebe o GameState, Player e o nível de dificuldade e retorna o moviemento que vai fazer. O movimento é composto por: RowPiece-ColumnPiece-Row-Column. O predicado **find_piece** retorna a peça que vai ser movimentada (RowPiece,ColumnPiece) e **find_move** retorna para onde vai a peça. O nivel de dificuldade implementada foi o **facíl**, sendo a procura das linhas e colunas utilizadas por um algoritmo **random**, verificando sempre se é valido ou não.
 
 ## **Conclusões:**
 O trabalho desenvolvido teve como objetivo a aprendizagem da liguagem Prolog e da programação lógica por trás de um jogo.
-Durante a implementação do trabalho, surgiram algumas dúvidas envolvendo a lógica do jogo e a maneira mais eficaz para a sua implementação.
-A nivel do desenvolvimento do trabalho poderão existir alguns problemas nas jogadas da terceira espécie (Zombies) nos modos de jogo humano VS pc e pc VS humano. Quanto aos níveis de dificuldades só existe o nivel facíl.
-Para uma melhoria do jogo poderiamos ter implementado um algoritmo greedy para aumentar o nivel de dificuldade.
+Durante a implementação do trabalho, surgiram algumas dúvidas envolvendo a lógica do jogo e a maneira mais eficaz para a sua implementação.  
+A nivel do desenvolvimento do trabalho poderão existir alguns problemas nas jogadas da terceira espécie (Zombies) nos modos de jogo **humano versus pc** e **pc versus humano**. Quanto aos níveis de dificuldades só foi implementado o primeiro nível - o nivel facíl - usando um bot que joga aleatóriamente.
+Para uma melhoria do jogo poderiamos ter implementado um algoritmo "greedy" para aumentar o nivel de dificuldade.
   
 ## **Bibliografia:**
 * [Página oficial do jogo](https://nestorgames.com/#greenskull_detail)

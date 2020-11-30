@@ -29,6 +29,20 @@ play_game(GameState-[PO,PG,PZ],Player,GreenSkull,LevelO-LevelG):-
     next(Player,FinalGameState-[POF,PGF,PZF], NewestGreenSkull,LevelO,LevelG).
 
 
+% Checks if can start the next round
+%   - Sees if the game is over
+%   - Displays current scores
+%   - Sets the player for the next round
+%   - Starts next round
+% [PO1,PG1,PZ1] - Score list
+next(Player,GameState-[PO1,PG1,PZ1],GreenSkull,LevelO,LevelG):-
+    \+ game_over(GameState-[PO1,PG1,PZ1], _),!,
+    display_scores(PO1-PG1-PZ1),
+    set_next_player(Player, NextPlayer),
+    play_game(GameState-[PO1,PG1,PZ1], NextPlayer, GreenSkull,LevelO-LevelG).
+next(_,_-_,_,_,_).
+
+
 % Gets the difficulty level - Sadly only the first one (random) is implemented
 choose_level_round(o,_,LO-_,Level):-Level=LO.
 choose_level_round(g,_,_-LG,Level):-Level=LG.
@@ -95,24 +109,14 @@ checks_play_again_bot(GameState-[PO,PG,PZ], _, _, FinalGameState-[POF,PGF,PZF], 
     [POF,PGF,PZF] = [PO,PG,PZ].
 
 
-% Checks if can start the next round
-%   - Sees if the game is over
-%   - Displays current scores
-%   - Sets the player for the next round
-%   - Starts next round
-% [PO1,PG1,PZ1] - Score list
-next(Player,GameState-[PO1,PG1,PZ1],GreenSkull,LevelO,LevelG):-
-    \+ game_over(GameState-[PO1,PG1,PZ1], _),!,
-    display_scores(PO1-PG1-PZ1),
-    set_next_player(Player, NextPlayer),
-    play_game(GameState-[PO1,PG1,PZ1], NextPlayer, GreenSkull,LevelO-LevelG).
-next(_,_-_,_,_,_).
 
+% -------------------------- Auxiliar functions --------------------------
 % Generates pc play
 choose_move(GameState,Player,1, RowPiece-ColumnPiece-Row-Column):-
     find_piece(GameState,Player,RowPiece-ColumnPiece),
     find_move(GameState,RowPiece-ColumnPiece,Row-Column),
     sleep(5).
+
 
 % Generates valid starting piece
 find_piece(GameState,Player,RowPiece-ColumnPiece):-
@@ -124,7 +128,7 @@ find_piece(GameState,Player,RowPiece-ColumnPiece):-
     nth1(R,List,[RowPiece,ColumnPiece]),
     valid_piece(GameState,Player,RowPiece,ColumnPiece),!.
 
-% Return all coordenates of Player pieces
+% Return a list with all coordenates of Player pieces currently playing
 valid_pieces(GameState,Player,List):-
     find_pieces(GameState,Player,1,[],List).
 
@@ -156,6 +160,7 @@ getCoordinates(_,NRow-NColumn,_,_,[]):-
 getCoordinates(Row,NRow-NColumn,Player,List,FinalList):-
     NewNColumn is NColumn+1,
     getCoordinates(Row,NRow-NewNColumn,Player,List,FinalList).
+
 
 % Generates move
 find_move(GameState,RowPiece-ColumnPiece,Row-Column):-

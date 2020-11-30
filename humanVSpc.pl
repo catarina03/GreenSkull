@@ -7,7 +7,9 @@ human_pc:-
 
 
 
-%Turn: Orcs==HUMAN
+% Human plays as the orcs
+% Displays the game, chooses the piece to play with, plays, checks if can play again, checks if can play as zombies, plays as zombie
+% Generates the next round
 play_human_pc_game(GameState-[PO,PG,PZ],o,GreenSkull,LevelG):-
     display_game(GameState-GreenSkull,o),
     choose_piece(GameState,o,RowPiece,ColumnPiece),
@@ -15,7 +17,9 @@ play_human_pc_game(GameState-[PO,PG,PZ],o,GreenSkull,LevelG):-
     nextHP(o,NewGameState-[PO1,PG1,PZ1],FinalGreenSkull,LevelG).
     
 
-%Turn: Goblins==PC
+% PC plays as the goblins
+% Displays the game, chooses the piece to play with, plays, checks if can play again, checks if can play as zombies, plays as zombie
+% Generates the next round
 play_human_pc_game(GameState-[PO,PG,PZ],g,GreenSkull,LevelG):-
     display_game(GameState-GreenSkull,g),
     choose_move(GameState, g,LevelG, RowPiece-ColumnPiece-Row-Column),
@@ -30,7 +34,7 @@ play_human_pc_game(GameState-[PO,PG,PZ],g,GreenSkull,LevelG):-
     nextHP(g,FinalGameState-[POF,PGF,PZF],NewestGreenSkull,LevelG).
 
 
-%função com argumento extra.
+% Generates next round
 nextHP(Player,GameState-[PO1,PG1,PZ1],GreenSkull,Level):-
     \+ game_over(GameState-[PO1,PG1,PZ1], _),!,
     display_scores(PO1-PG1-PZ1),
