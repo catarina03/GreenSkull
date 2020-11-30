@@ -64,19 +64,17 @@ O predicado começa por chamar o predicado **print_board**, que escreve na conso
 Depois imprime a númeração das colunas (predicado **display_column_numbers**) e de quem é a vez de jogar, juntamente com quem tem a Green Skull (predicados **display_green_skull** e **display_player_turn** respetivamente).
 Ao acabar o jogo, é impresso um menu onde aparece Game Over, as pontuações de cada espécie e a espécie vencedora.
 
-**Menus iniciais**
+## **Menus iniciais**
+<img src="./images/menu1.png" alt="menu" width="300"/> 
+<img src="./images/menu2.png" alt="menu" width="300"/>   
 
-<img src="./images/menu1.png" alt="menu" width="300" height="300"/> 
-<img src="./images/menu2.png" alt="menu" width="300" height="300"/> 
+
+## **Estado inicial do jogo:**
+<img src="./images/inicial.png" alt="initial board"/> 
 
 
-**Estado inicial do jogo:**  
-
-<img src="./images/inicial.png" alt="initial board" width="300" height="300"/> 
-
-**Menu final com as pontuações e o vencedor**
-
-<img src="./images/gameover.png" alt="initial board" width="300"/> 
+## **Menu final com as pontuações e o vencedor**
+<img src="./images/gameover.png" alt="initial board" width="300"/>   
 
 
 ## **Lista de Jogadas Válidas:**
@@ -89,7 +87,8 @@ A execução das jogadas é feita atravé do predicado **move**. Aqui vemos toda
 Na passagem à próxima jogada através do predicado **next**, verificamos se chegamos ao fim do jogo através do predicado **game_over**,que só retornará ao next caso não tenhamos chegado ao fim. Para a verificação usamos o **is_over**, que percorre o GameState a fim de encontrar uma situação de final de jogo. Caso seja encontrado, prosseguirá para **final_scores**, que retorna as pontuação final do jogo, consoante o ultimo estado e seguidamente irá para o **get_winner** que retorna o vencedor consoante a pontuação final.  
 
 <img src="./images/game_over.png" alt="game_over code" /> 
-<img src="./images/is_over.png" alt="is_over coded"/> 
+<img src="./images/is_over.png" alt="is_over coded"/>   
+
 
 ## **Jogada do Computador:**
 A jogada do computador é feita através do predicado **choose_move**, que recebe o GameState, Player e o nível de dificuldade e retorna o moviemento que vai fazer. O movimento é composto por: RowPiece-ColumnPiece-Row-Column. O predicado **find_piece** retorna a peça que vai ser movimentada (RowPiece,ColumnPiece) e **find_move** retorna para onde vai a peça. O nivel de dificuldade implementada foi o **facíl**, sendo a procura das linhas e colunas utilizadas por um algoritmo **random**, verificando sempre se é valido ou não.
