@@ -73,3 +73,6 @@ initial_player(o).
 % The globins start with the Green Skull
 initial_green_skull(g).
 
+green_skull(o, g).
+green_skull(g, o).
+

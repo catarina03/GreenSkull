@@ -47,8 +47,8 @@ initial(GameState-Player-GreenSkull) :-
 play_round(GameState-[PO,PG,PZ], Player, GreenSkull):- 
     display_game(GameState-GreenSkull,Player),
     choose_piece(GameState,Player,RowPiece,ColumnPiece),
-    move_human_piece(GameState-[PO,PG,PZ]-Player,RowPiece-ColumnPiece,NewGameState-[PO1,PG1,PZ1]),
-    next(Player,NewGameState-[PO1,PG1,PZ1],GreenSkull).
+    move_human_piece(GameState-[PO,PG,PZ]-Player-GreenSkull,RowPiece-ColumnPiece,NewGameState-[PO1,PG1,PZ1]-NewGreenSkull),
+    next(Player,NewGameState-[PO1,PG1,PZ1],NewGreenSkull).
     
 next(Player,GameState-[PO1,PG1,PZ1],GreenSkull):-
     \+ game_over(GameState-[PO1,PG1,PZ1], _),!,
@@ -99,18 +99,23 @@ allElemetsOut(GameState,Player,N):-
 color_in_line(GameState) :-
     zombies_spread(GameState,1).
 
+%verifica se O está nos primeiros elementos de linha.
+color_in_line(GameState) :- 
+    orcs_spread(GameState,10).
+
+%verifica se G está nos primeiros elementos de linha.
+color_in_line(GameState) :- 
+    goblins_spread(GameState,2).
+
+
 zombies_spread(GameState,Indice):-
     Indice<10,
     nth1(Indice,GameState,L),
     \+ member(z,L),
     NewIndice is Indice+1,
     zombies_spread(GameState,NewIndice).
-
 zombies_spread(_,10).
     
-%verifica se O está nos primeiros elementos de linha.
-color_in_line(GameState) :- 
-    orcs_spread(GameState,10).
     
 orcs_spread(GameState,Indice):-
     Indice>1,
@@ -118,8 +123,15 @@ orcs_spread(GameState,Indice):-
     \+ member(o,L),
     NewIndice is Indice-1,
     orcs_spread(GameState,NewIndice).
-
 orcs_spread(_,1).
+
+goblins_spread(GameState,Indice):-
+    Indice<10,
+    get_right_diagonal(GameState,Indice,Indice,L),
+    \+ member(g,L),
+    NewIndice is Indice+1,
+    goblins_spread(GameState,NewIndice).
+goblins_spread(_,10).
 
 get_left_diagonal(GameState,Indice,N,[L1|R]):-
     nth1(N,GameState,L),
@@ -129,18 +141,6 @@ get_left_diagonal(GameState,Indice,N,[L1|R]):-
 
 get_left_diagonal(_,_,11,[]).
 
-%verifica se G está nos primeiros elementos de linha.
-color_in_line(GameState) :- 
-    goblins_spread(GameState,2).
-
-goblins_spread(GameState,Indice):-
-    Indice<10,
-    get_right_diagonal(GameState,Indice,Indice,L),
-    \+ member(g,L),
-    NewIndice is Indice+1,
-    goblins_spread(GameState,NewIndice).
-
-goblins_spread(_,10).
 
 get_right_diagonal(GameState,Indice,N,[L1|R]):-
     nth1(N,GameState,L),
