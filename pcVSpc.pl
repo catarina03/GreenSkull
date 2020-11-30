@@ -1,5 +1,6 @@
 :-use_module(library(random)).
-%:-include('game.pl').
+
+%------------ P C  VS   P C -----------------------------
 
 pc_pc:-
     initial(GameState-Player-GreenSkull),nl,
@@ -9,14 +10,6 @@ pc_pc:-
     get_level(LevelG),
     play_game(GameState-[0,0,0],Player,GreenSkull,LevelO-LevelG).
 
-get_level(Level):-
-    write('                  |         L E V E L       |'),nl,
-    write('               ---------------------------------'),nl,
-    write('                  |         1. Easy         |'),nl,
-    write('                  |         2. Hard         |'),nl,
-    write('               ---------------------------------'),nl,
-    write('                  |                         |'),nl,
-    write('               Option: '),read(Level),nl,nl.
 
 play_game(GameState-[PO,PG,PZ],Player,GreenSkull,LevelO-LevelG):-
     display_game(GameState-GreenSkull,Player),
@@ -81,7 +74,7 @@ getCoordinates(Row,NRow-NColumn,Player,List,FinalList):-
     Elem==Player,!,
     append(List,[[NRow,NColumn]],NewList),
     NewNColumn is NColumn+1,
-    getCoordinates(Row,NRow-NewNColumn,Player,List2,AlmostList),
+    getCoordinates(Row,NRow-NewNColumn,Player,_,AlmostList),
     append(NewList,AlmostList,FinalList).
 
 getCoordinates(_,NRow-NColumn,_,_,[]):-
@@ -91,8 +84,6 @@ getCoordinates(_,NRow-NColumn,_,_,[]):-
 getCoordinates(Row,NRow-NColumn,Player,List,FinalList):-
     NewNColumn is NColumn+1,
     getCoordinates(Row,NRow-NewNColumn,Player,List,FinalList).
-
-
 
 
 find_move(GameState,RowPiece-ColumnPiece,Row-Column):-

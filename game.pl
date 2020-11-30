@@ -1,6 +1,9 @@
 :-include('display.pl').
 :-include('moves.pl').
+:-include('humanVShuman.pl').
 :-include('pcVSpc.pl').
+:-include('humanVSpc.pl').
+:-include('pcVShuman.pl').
 
 play:-
     display_menu(C),
@@ -19,22 +22,16 @@ play_game(1):-
     human_human.
 
 play_game(2):-
-    display_play_mode(2).
-    %human_pc.
+    display_play_mode(2),
+    human_pc.
 
 play_game(3):-
-    display_play_mode(3).
-    %pc_human.
+    display_play_mode(3),
+    pc_human.
 
 play_game(4):-
     display_play_mode(4),
     pc_pc.
-
-%------------ H U M A N   VS   H U M A N -----------------------------
-% Starts the game
-human_human:- 
-    initial(GameState-Player-GreenSkull),
-    play_round(GameState-[0,0,0], Player, GreenSkull).
 
 
 % Initializes the game
@@ -42,25 +39,11 @@ initial(GameState-Player-GreenSkull) :-
     initial_board(GameState),
     initial_player(Player),
     initial_green_skull(GreenSkull).
-   
-   
-% Plays one round of game
-play_round(GameState-[PO,PG,PZ], Player, GreenSkull):- 
-    display_game(GameState-GreenSkull,Player),
-    choose_piece(GameState,Player,RowPiece,ColumnPiece),
-    move_human_piece(GameState-[PO,PG,PZ]-Player,RowPiece-ColumnPiece,NewGameState-[PO1,PG1,PZ1]),
-    next(Player,NewGameState-[PO1,PG1,PZ1],GreenSkull).
-    
-next(Player,GameState-[PO1,PG1,PZ1],GreenSkull):-
-    \+ game_over(GameState-[PO1,PG1,PZ1], _),!,
-    display_scores(PO1-PG1-PZ1),
-    set_next_player(Player, NextPlayer),
-    play_round(GameState-[PO1,PG1,PZ1], NextPlayer, GreenSkull).
 
-%next(Player,GameState-[PO1,PG1,PZ1],GreenSkull):-write('false').
-
+%game over 
 game_over(GameState-[PO,PG,PZ],Winner):-
     is_over(GameState),!,
+    display_board(GameState),
     display_game_over,
     final_scores(GameState-[PO,PG,PZ],[PO1,PG1,PZ1]),
     display_final_scores(PO1-PG1-PZ1),
@@ -203,5 +186,7 @@ get_winner(PO1-PG1-PZ1,Player):-
     PZ1>PO1,
     Player=g-z.
 
-%------------ P C  VS   P C -----------------------------
-
+%escolhe o nivel em que o pc vai jogar
+get_level(Level):-
+    display_level,
+    read(Level),nl,nl.

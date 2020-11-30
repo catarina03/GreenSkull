@@ -169,3 +169,11 @@ display_winner(g-z):-
     write('          W I N N E R:  G O B L I N S  &  Z O M B I E S     '),nl,
     nl,nl,nl.
 
+display_level:-
+    write('                  |         L E V E L       |'),nl,
+    write('               ---------------------------------'),nl,
+    write('                  |         1. Easy         |'),nl,
+    write('                  |         2. Hard         |'),nl,
+    write('               ---------------------------------'),nl,
+    write('                  |                         |'),nl,
+    write('               Option: ').
