@@ -38,3 +38,20 @@ input_message(Message,Response) :-
     write(Message),nl, read(Response), nl.
 
 
+get_left_diagonal(GameState,Indice,N,[L1|R]):-
+    nth1(N,GameState,L),
+    nth1(Indice,L,L1),
+    N1 is N+1,
+    get_left_diagonal(GameState,Indice,N1,R).
+get_left_diagonal(_,_,11,[]).
+
+
+get_right_diagonal(GameState,Indice,N,[L1|R]):-
+    nth1(N,GameState,L),
+    NewIndice is N-Indice+1,
+    nth1(NewIndice,L,L1),
+    N1 is N+1,
+    get_right_diagonal(GameState,Indice,N1,R).
+get_right_diagonal(_,_,11,[]).
+
+
