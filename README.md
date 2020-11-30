@@ -80,7 +80,7 @@ Ao acabar o jogo, é impresso um menu onde aparece Game Over, as pontuações de
 
 **Menu final com as pontuações e o vencedor**
 
-<img src="./images/gameover.png" alt="initial board" width="600"/> 
+<img src="./images/gameover.png" alt="initial board" width="300"/> 
 
 
 ## **Lista de Jogadas Válidas:**
