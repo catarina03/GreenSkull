@@ -9,7 +9,7 @@ pc_pc:-
     get_level(LevelG),
     play_game(GameState-[0,0,0],Player,GreenSkull,LevelO-LevelG).
 
-levelPlayer(Level):-
+get_level(Level):-
     write('                  |         L E V E L       |'),nl,
     write('               ---------------------------------'),nl,
     write('                  |         1. Easy         |'),nl,
@@ -41,16 +41,16 @@ next(Player,GameState-[PO1,PG1,PZ1],GreenSkull,LevelO,LevelG):-
 %using random:
 choose_move(GameState,Player,1,Move):-
     find_piece(GameState,Player,RowPiece-ColumnPiece),
+    write('piece finded'),
     find_move(GameState,RowPiece-ColumnPiece,Row-Column),
     Move=RowPiece-ColumnPiece-Row-Column.
 
 find_piece(GameState,Player,RowPiece-ColumnPiece):-
-    %repeat?
     %encontrar lista onde estão as peças ou as peças disponiveis para usar
     valid_pieces(GameState,Player,List),
     length(List,N),
     %fazer random para fazer escolher peça a mover
-    random_between(1,N,R),
+    get_random(N,R),
     nth1(R,List,Piece),
     Piece=[RowPiece,ColumnPiece],
     valid_piece(GameState,Player,RowPiece,ColumnPiece),!.
@@ -76,15 +76,13 @@ find_pieces(GameState,Player,NRow,List,FinalList):-
 
 %muda as colunas
 getCoordinates(Row,NRow-NColumn,Player,List,FinalList):-
-    write(NColumn),write(NRow),nl,
     NColumn=<NRow,
     nth1(NColumn,Row,Elem),
     Elem==Player,!,
     append(List,[[NRow,NColumn]],NewList),
     NewNColumn is NColumn+1,
     getCoordinates(Row,NRow-NewNColumn,Player,List2,AlmostList),
-    append(NewList,AlmostList,FinalList),
-    write(FinalList),nl.
+    append(NewList,AlmostList,FinalList).
 
 getCoordinates(_,NRow-NColumn,_,_,[]):-
     NextNRow is NRow+1,
@@ -100,19 +98,24 @@ getCoordinates(Row,NRow-NColumn,Player,List,FinalList):-
 find_move(GameState,RowPiece-ColumnPiece,Row-Column):-
     %fazer random para fazer escolher para onde mover
     valid_moves(GameState, _-RowPiece-ColumnPiece, ListAdjacentMoves-ListEatMoves),
-    random_between(1,2,RList),
+    write(ListAdjacentMoves), write(ListEatMoves),nl,nl,
+   % trace,
+    random(1,2,RList),
     choose_list(ListAdjacentMoves-ListEatMoves,RList,List),
     length(List,N),
-    random_between(1,N,R),
+    get_random(N,R),
     nth1(R,List,Move),
     Move=[Row,Column].
+  %  notrace.
 
 choose_list(ListAdjacentMoves-_,1,ListAdjacentMoves).
 choose_list(_-ListEatMoves,2,ListEatMoves).
+choose_list([]-ListEatMoves,1,ListEatMoves).
+choose_list(ListAdjacentMoves-[],2,ListAdjacentMoves).
 
-
-
-
+get_random(N,R):-random(1,N,R).
+get_random(1,1).
+    
 
 %using greedy algorithm:
 choose_move(GameState,Player,2,Move).

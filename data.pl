@@ -67,6 +67,19 @@ final_board([
      [o,e,e,e,e,e,e,e,e],   
     [o,z,z,z,e,e,e,e,e,e] ]).
 
+error_board([      
+             [e],         
+            [g,e],         
+           [e,g,z],        
+          [e,e,e,z],         
+         [e,e,e,e,e],         
+        [e,e,z,z,e,e],             
+       [e,o,e,z,e,e,e],       
+      [e,e,e,e,z,e,e,e],        
+     [e,e,e,e,e,e,e,e,e],   
+    [e,e,e,e,e,e,e,e,e,e] 
+]).
+
 % The orcs start playing first
 initial_player(o).
 	
