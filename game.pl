@@ -52,10 +52,11 @@ play_round(GameState-[PO,PG,PZ], Player, GreenSkull):-
     
 next(Player,GameState-[PO1,PG1,PZ1],GreenSkull):-
     \+ game_over(GameState-[PO1,PG1,PZ1], _),!,
-    write('not done yet'),nl,
     display_scores(PO1-PG1-PZ1),
     set_next_player(Player, NextPlayer),
     play_round(GameState-[PO1,PG1,PZ1], NextPlayer, GreenSkull).
+
+%next(Player,GameState-[PO1,PG1,PZ1],GreenSkull):-write('false').
 
 game_over(GameState-[PO,PG,PZ],Winner):-
     is_over(GameState),!,
