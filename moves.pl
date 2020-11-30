@@ -3,19 +3,34 @@
 
 
 % Player makes a move
-move(GameState-[PO,PG,PZ]-Player,RowPiece-ColumnPiece-Row-Column, NewGameState-[PO1,PG1,PZ1]-ListEat):- 
+move(GameState-[PO,PG,PZ]-Player-GreenSkull,RowPiece-ColumnPiece-Row-Column-MoveType, NewGameState-[PO1,PG1,PZ1]-ListEat-NewGreenSkull):- 
     valid_moves(GameState, Player-RowPiece-ColumnPiece, LAM-LEM),
-    is_valid_move(GameState, LAM-LEM, [Row, Column]),
+    is_valid_move(GameState, LAM-LEM, [Row, Column], MoveType),
+    change_green_skull(MoveType, Player, GreenSkull, NewGreenSkull),
     change_board(GameState, RowPiece-ColumnPiece, Row-Column, NewGameState, ElemEaten),
     change_score([PO,PG,PZ]-Player-ElemEaten,[PO1,PG1,PZ1]),
     get_move_eat(Row, Column, ListEat, NewGameState).
 
-    
+
+zombie_move(GameState-[PO,PG,PZ]-Player-GreenSkull,RowPiece-ColumnPiece-Row-Column-MoveType, NewGameState-[PO1,PG1,PZ1]-ListEat-NewGreenSkull, y) :-
+    valid_moves(GameState, z-RowPiece-ColumnPiece, LAM-LEM),
+    is_valid_move(GameState, LAM-LEM, [Row, Column], MoveType),
+    change_green_skull(MoveType, Player, GreenSkull, NewGreenSkull),
+    change_board(GameState, RowPiece-ColumnPiece, Row-Column, NewGameState, ElemEaten),
+    change_score([PO,PG,PZ]-Player-ElemEaten,[PO1,PG1,PZ1]),
+    get_move_eat(Row, Column, ListEat, NewGameState).
+
+zombie_move(GameState-[PO,PG,PZ]-_-GreenSkull, _, NewGameState-[PO1,PG1,PZ1]-ListEat-NewGreenSkull, n) :-
+    NewGameState = GameState,
+    [PO1,PG1,PZ1] = [PO,PG,PZ],
+    NewGreenSkull = GreenSkull,
+    ListEat = [].
+
 
 % Choose piece you want to move and sees if is valid-------------------------------------
 choose_piece(GameState,Player,Row,Column):-
     repeat,
-    input_play('  Which piece:',Row,Column),
+    input_play('Which piece:',Row,Column),
     valid_piece(GameState,Player,Row,Column),!.
 
 
@@ -41,13 +56,18 @@ play_again(GameState-[PO,PG,PZ], [], _, FinalGameState-[POF,PGF,PZ]) :-
     FinalGameState = GameState,
     [POF,PGF,PZ] = [PO,PG,PZ].
 
-play_again(GameState-[PO,PG,PZ], ListEat, Player-[Row, Column], FinalGameState-[POF,PGF,PZ]) :-
+play_again(GameState-[PO,PG,PZ], ListEat, Player-[Row, Column]-e, FinalGameState-[POF,PGF,PZ]) :-
     input_message('Play again? [y/n]', Response),
-    checks_play_again(GameState-[PO,PG,PZ], ListEat, Player-[Row, Column], FinalGameState-[POF,PGF,PZ], Response).
+    checks_play_again(GameState-[PO,PG,PZ], ListEat, Player-[Row, Column]-e, FinalGameState-[POF,PGF,PZ], Response).
+
+play_again(GameState-[PO,PG,PZ], _, _, FinalGameState-[POF,PGF,PZ]) :-
+    FinalGameState = GameState,
+    [POF,PGF,PZ] = [PO,PG,PZ].
 
 
 
-checks_play_again(GameState-[PO,PG,PZ], ListEat, Player-[Row, Column], FinalGameState-[POF,PGF,PZ], y) :-
+checks_play_again(GameState-[PO,PG,PZ], ListEat, Player-[Row, Column]-e, FinalGameState-[POF,PGF,PZ], y) :-
+    display_board(GameState),
     input_play('Where to go:',RowInput,ColumnInput),
     is_member([RowInput, ColumnInput], ListEat),
     !, 
@@ -55,14 +75,33 @@ checks_play_again(GameState-[PO,PG,PZ], ListEat, Player-[Row, Column], FinalGame
     change_board(GameState, Row-Column, RowInput-ColumnInput, NewGameState, ElemEaten),
     change_score([PO,PG,PZ]-Player-ElemEaten,[PO1,PG1,PZ1]),
     get_move_eat(RowInput, ColumnInput, NewListEat, NewGameState),
-    play_again(NewGameState-[PO1,PG1,PZ1], NewListEat, Player-[RowInput, ColumnInput], FinalGameState-[POF,PGF,PZ]).
+    play_again(NewGameState-[PO1,PG1,PZ1], NewListEat, Player-[RowInput, ColumnInput]-e, FinalGameState-[POF,PGF,PZ]).
 
 
-checks_play_again(GameState-[PO,PG,PZ], _, _, FinalGameState-[POF,PGF,PZ], n) :-
+checks_play_again(GameState-[PO,PG,PZ], _, _, FinalGameState-[POF,PGF,PZF], n) :-
     FinalGameState = GameState,
-    [POF,PGF,PZ] = [PO,PG,PZ].
+    [POF,PGF,PZF] = [PO,PG,PZ].
 
 %----------------------------------------------------------------------------------------
+
+play_again_zombies(GameState-[PO,PG,PZ]-GreenSkull, [], _, FinalGameState-[POF,PGF,PZF]-NewGreenSkull) :-
+    FinalGameState = GameState,
+    [POF,PGF,PZF] = [PO,PG,PZ],
+    NewGreenSkull = GreenSkull.
+
+play_again_zombies(GameState-[PO,PG,PZ]-GreenSkull, ListEat, Player-[Row, Column]-e, FinalGameState-[POF,PGF,PZ]-NewGreenSkull) :-
+    GreenSkull == Player,
+    input_message('Play again with zombie? [y/n]', Response),
+    checks_play_again(GameState-[PO,PG,PZ], ListEat, Player-[Row, Column]-e, FinalGameState-[POF,PGF,PZ], Response),
+    change_green_skull(GreenSkull, NewGreenSkull).
+
+play_again_zombies(GameState-[PO,PG,PZ]-GreenSkull, _, _, FinalGameState-[POF,PGF,PZF]-NewGreenSkull) :-
+    FinalGameState = GameState,
+    [POF,PGF,PZF] = [PO,PG,PZ],
+    NewGreenSkull = GreenSkull.
+
+
+% ----------------------------------------------------------------------------------------
 
 % For a piece [Row/Column], get its valid moves
 valid_moves(GameState, _-Row-Column, ListAdjacentMoves-ListEatMoves) :-
@@ -72,24 +111,52 @@ valid_moves(GameState, _-Row-Column, ListAdjacentMoves-ListEatMoves) :-
 
 % ----------------------------------------------------------------------------------
 
+change_green_skull(e, Player, GreenSkull, NewGreenSkull) :-
+    Player == GreenSkull,
+    green_skull(GreenSkull, NewGreenSkull).
+
+change_green_skull(e, _, GreenSkull, NewGreenSkull) :-
+    NewGreenSkull = GreenSkull.
+
+change_green_skull(a, _, GreenSkull, NewGreenSkull) :-
+    NewGreenSkull = GreenSkull.
 
 
+play_zombies(GameState-[PO,PG,PZ]-Player-GreenSkull,RowPiece-ColumnPiece-Row-Column-MoveType, NewGameState-[PO1,PG1,PZ1]-ListEat-NewGreenSkull) :-
+    GreenSkull == Player,
+    input_message('Play with a zombie? [y/n]', Response),
+    choose_piece(GameState,z,RowPiece,ColumnPiece),
+    input_play('Where to:',Row,Column),
+    zombie_move(GameState-[PO,PG,PZ]-Player-GreenSkull,RowPiece-ColumnPiece-Row-Column-MoveType, NewGameState-[PO1,PG1,PZ1]-ListEat-NewGreenSkull, Response).
+
+play_zombies(GameState-[PO,PG,PZ]-_-GreenSkull, _, NewGameState-[PO1,PG1,PZ1]-ListEat-NewGreenSkull) :-
+    NewGameState = GameState,
+    [PO1,PG1,PZ1] = [PO,PG,PZ],
+    NewGreenSkull = GreenSkull,
+    ListEat = [].
+
+
+
+
+% --------------------------------------------------------------------------------------
 
 %choose where you want to move the piece and sees if is valid----------------------------
-move_human_piece(GameState-[PO,PG,PZ]-Player,RowPiece-ColumnPiece,FinalGameState-[POF,PGF,PZF]):-
+move_human_piece(GameState-[PO,PG,PZ]-Player-GreenSkull,RowPiece-ColumnPiece,FinalGameState-[POF,PGF,PZF]-FinalGreenSkull):-
     repeat,
-    input_play('  Where to:',Row,Column),
-    Move=RowPiece-ColumnPiece-Row-Column,
-    move(GameState-[PO,PG,PZ]-Player,Move,NewGameState-[PO1,PG1,PZ1]-ListEat),
-    play_again(NewGameState-[PO1,PG1,PZ1], ListEat, Player-[Row, Column], FinalGameState-[POF,PGF,PZF]).
+    input_play('Where to:',Row,Column),
+    move(GameState-[PO,PG,PZ]-Player-GreenSkull, RowPiece-ColumnPiece-Row-Column-MoveType, NewGameState-[PO1,PG1,PZ1]-ListEat-NewGreenSkull),
+    play_again(NewGameState-[PO1,PG1,PZ1], ListEat, Player-[Row, Column]-MoveType, NewerGameState-[PO2,PG2,PZ2]),
+
+    play_zombies(NewerGameState-[PO2,PG2,PZ2]-Player-NewGreenSkull, _-_-RowZombie-ColumnZombie-MoveTypeZombie, NewZombieGameState-[PO3,PG3,PZ3]-ListEatZombie-NewerGreenSkull),
+    play_again_zombies(NewZombieGameState-[PO3,PG3,PZ3]-NewerGreenSkull, ListEatZombie, Player-[RowZombie, ColumnZombie]-MoveTypeZombie, FinalGameState-[POF,PGF,PZF]-FinalGreenSkull).
 
 
 
-is_valid_move(_, LAM-_, Position) :-
+is_valid_move(_, LAM-_, Position, a) :-
     is_member(Position, LAM).
 
 % Only this one changes ElemEaten
-is_valid_move(_, _-LEM, Position) :-
+is_valid_move(_, _-LEM, Position, e) :-
     is_member(Position, LEM).
 
 % ==================================================================
@@ -111,20 +178,6 @@ change_board(GameState, RowPiece-ColumnPiece, Row-Column, NewGameState, ElemEate
     RowFood is RowPiece + R, 
     ColumnFood is ColumnPiece + C,
     change_board_aux(RowPiece, ColumnPiece, Row, Column, RowFood, ColumnFood, GameState, NewGameState, ElemEaten).
-
-/*
-% Verifies if destination cell is adjacent, if so it changes the board
-check_surroundings(RowPiece, ColumnPiece, Row, Column, GameState,NewGameState-Elem):-
-    R is abs(RowPiece-Row),
-    C is abs(ColumnPiece-Column),
-    R=<1, C=<1,
-    check_adjacent_movement(RowPiece, ColumnPiece, Row, Column),
-    change_board(RowPiece,ColumnPiece, Row, Column, GameState,NewGameState),
-    Elem=e.
-
-% If player wants to eat something
-% Checks if what's between current position and destination is something edible (not white space)
-check_surroundings(RowPiece, ColumnPiece, Row, Column, GameState, NewGameState-Elem):- */
 
 
 % --------------------------------------------------------------------------------------

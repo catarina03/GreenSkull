@@ -10,16 +10,15 @@ human_pc:-
 play_human_pc_game(GameState-[PO,PG,PZ],o,GreenSkull,LevelG):-
     display_game(GameState-GreenSkull,o),
     choose_piece(GameState,o,RowPiece,ColumnPiece),
-    move_human_piece(GameState-[PO,PG,PZ]-o,RowPiece-ColumnPiece,NewGameState-[PO1,PG1,PZ1]),
-    nextHP(o,NewGameState-[PO1,PG1,PZ1],GreenSkull,LevelG).
-    
+    move_human_piece(GameState-[PO,PG,PZ]-o-GreenSkull,RowPiece-ColumnPiece,NewGameState-[PO1,PG1,PZ1]-NewGreenSkull),
+    nextHP(Player,NewGameState-[PO1,PG1,PZ1],NewGreenSkull,LevelG).
 
 %Turn: Zombies -> Orcs have the GreenSkull
 play_human_pc_game(GameState-[PO,PG,PZ],z,o,LevelG):-
     display_game(GameState-o,z),
     choose_piece(GameState,z,RowPiece,ColumnPiece),
-    move_human_piece(GameState-[PO,PG,PZ]-z,RowPiece-ColumnPiece,NewGameState-[PO1,PG1,PZ1]),
-    nextHP(z,NewGameState-[PO1,PG1,PZ1],o,LevelG).
+    move_human_piece(GameState-[PO,PG,PZ]-z-o,RowPiece-ColumnPiece,NewGameState-[PO1,PG1,PZ1]-NewGreenSkull),
+    nextHP(o,NewGameState-[PO1,PG1,PZ1],NewGreenSkull,LevelG).
 
 %Turn: Goblins==PC
 play_human_pc_game(GameState-[PO,PG,PZ],g,GreenSkull,LevelG):-

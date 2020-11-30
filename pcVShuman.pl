@@ -7,33 +7,35 @@ pc_human:-
 
 
 %Turn: Goblins==HUMAN
-play_pc_human_game(GameState-[PO,PG,PZ],g,GreenSkull,LevelG):-
-    display_game(GameState-GreenSkull,g),
-    choose_piece(GameState,g,RowPiece,ColumnPiece),
-    move_human_piece(GameState-[PO,PG,PZ]-g,RowPiece-ColumnPiece,NewGameState-[PO1,PG1,PZ1]),
-    nextPH(g,NewGameState-[PO1,PG1,PZ1],GreenSkull,LevelG).
+play_pc_human_game(GameState-[PO,PG,PZ],g,GreenSkull,LevelO):-
+    display_game(GameState-GreenSkull,o),
+    choose_piece(GameState,o,RowPiece,ColumnPiece),
+    move_human_piece(GameState-[PO,PG,PZ]-o-GreenSkull,RowPiece-ColumnPiece,NewGameState-[PO1,PG1,PZ1]-NewGreenSkull),
+    nextPH(Player,NewGameState-[PO1,PG1,PZ1],NewGreenSkull,LevelO).
     
 
 %Turn: Zombies -> Goblins have the GreenSkull
-play_pc_human_game(GameState-[PO,PG,PZ],z,g,LevelG):-
+play_pc_human_game(GameState-[PO,PG,PZ],z,g,LevelO):-
     display_game(GameState-g,z),
     choose_piece(GameState,z,RowPiece,ColumnPiece),
-    move_human_piece(GameState-[PO,PG,PZ]-z,RowPiece-ColumnPiece,NewGameState-[PO1,PG1,PZ1]),
-    nextPH(z,NewGameState-[PO1,PG1,PZ1],g,LevelG).
+    move_human_piece(GameState-[PO,PG,PZ]-z-g,RowPiece-ColumnPiece,NewGameState-[PO1,PG1,PZ1]-NewGreenSkull),
+    nextPH(o,NewGameState-[PO1,PG1,PZ1],NewGreenSkull,LevelO).
 
 %Turn: Orcs==PC
-play_pc_human_game(GameState-[PO,PG,PZ],o,GreenSkull,LevelG):-
+play_pc_human_game(GameState-[PO,PG,PZ],o,GreenSkull,LevelO):-
     display_game(GameState-GreenSkull,o),
-    choose_move(GameState, o,LevelG,Move),
+    trace,
+    choose_move(GameState,o,LevelG,Move),
     move(GameState-[PO,PG,PZ]-o,Move, NewGameState-[PO1,PG1,PZ1]-ListEat),   
     nextPH(o,NewGameState-[PO1,PG1,PZ1],GreenSkull,LevelG).
+    
 
 %Turn: Zombies -> Goblins have the GreenSkull
-play_pc_human_game(GameState-[PO,PG,PZ],z,o,LevelG):-
+play_pc_human_game(GameState-[PO,PG,PZ],z,o,LevelO):-
     display_game(GameState-o,z),
     choose_move(GameState, z,LevelG,Move),
     move(GameState-[PO,PG,PZ]-z,Move, NewGameState-[PO1,PG1,PZ1]-ListEat),
-    nextPH(z,NewGameState-[PO1,PG1,PZ1],o,LevelG).
+    nextPH(z,NewGameState-[PO1,PG1,PZ1],o,LevelO).
 
 %função com argumento extra.
 nextPH(Player,GameState-[PO1,PG1,PZ1],GreenSkull,Level):-
@@ -44,4 +46,3 @@ nextPH(Player,GameState-[PO1,PG1,PZ1],GreenSkull,Level):-
     play_pc_human_game(GameState-[PO1,PG1,PZ1], NextPlayer, GreenSkull,Level).
 
 nextPH(_,_-_,_,_).
-
