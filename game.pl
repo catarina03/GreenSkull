@@ -1,5 +1,6 @@
 :-include('display.pl').
 :-include('moves.pl').
+:-include('pcVSpc.pl').
 
 play:-
     display_menu(C),
@@ -25,9 +26,9 @@ play_game(3):-
     display_play_mode(3).
     %pc_human.
 
-play_game(3):-
-    display_play_mode(4).
-    %pc_pc.
+play_game(4):-
+    display_play_mode(4),
+    pc_pc.
 
 %------------ H U M A N   VS   H U M A N -----------------------------
 % Starts the game
@@ -60,7 +61,6 @@ next(Player,GameState-[PO1,PG1,PZ1],GreenSkull):-
 
 game_over(GameState-[PO,PG,PZ],Winner):-
     is_over(GameState),!,
-    write('done'),nl,
     display_game_over,
     final_scores(GameState-[PO,PG,PZ],[PO1,PG1,PZ1]),
     display_final_scores(PO1-PG1-PZ1),
@@ -69,12 +69,10 @@ game_over(GameState-[PO,PG,PZ],Winner):-
 
 % Checks if game is over 
 is_over(GameState) :- 
-    pieces_out(GameState),
-    write('pieces out'),nl.
+    pieces_out(GameState).
 
 is_over(GameState):-
-    color_in_line(GameState),
-    write('color in line'),nl.
+    color_in_line(GameState).
 
 %Verifies if there's any player out
 %verifica se Z está em jogo
@@ -120,7 +118,6 @@ color_in_line(GameState) :-
 orcs_spread(GameState,Indice):-
     Indice>1,
     get_left_diagonal(GameState,Indice,Indice,L),
-    write('orcs: '),write(L),nl,
     \+ member(o,L),
     NewIndice is Indice-1,
     orcs_spread(GameState,NewIndice).
@@ -142,7 +139,6 @@ color_in_line(GameState) :-
 goblins_spread(GameState,Indice):-
     Indice<10,
     get_right_diagonal(GameState,Indice,Indice,L),
-    write('gobline: '),write(L),nl,
     \+ member(g,L),
     NewIndice is Indice+1,
     goblins_spread(GameState,NewIndice).

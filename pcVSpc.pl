@@ -1,11 +1,11 @@
 :-use_module(library(random)).
-:-include('game.pl').
+%:-include('game.pl').
 
 pc_pc:-
-    initial(GameState-Player-GreenSkull),
-    write('                   Choose Orcs level:     '),nl,
+    initial(GameState-Player-GreenSkull),nl,
+    write('               Choose Orcs level:     '),nl,nl,
     get_level(LevelO),
-    write('                   Choose Goblins level:     '),nl,
+    write('               Choose Goblins level:     '),nl,nl,
     get_level(LevelG),
     play_game(GameState-[0,0,0],Player,GreenSkull,LevelO-LevelG).
 
@@ -34,7 +34,6 @@ choose_level_round(z,g,_-LG,Level):-Level=LG.
 %função com 2 argumento extra.
 next(Player,GameState-[PO1,PG1,PZ1],GreenSkull,LevelO,LevelG):-
     \+ game_over(GameState-[PO1,PG1,PZ1], _),!,
-    write('not done yet'),nl,
     display_scores(PO1-PG1-PZ1),
     set_next_player(Player, NextPlayer),
     play_game(GameState-[PO1,PG1,PZ1], NextPlayer, GreenSkull,LevelO-LevelG).
@@ -97,17 +96,13 @@ getCoordinates(Row,NRow-NColumn,Player,List,FinalList):-
 
 
 find_move(GameState,RowPiece-ColumnPiece,Row-Column):-
-    %fazer random para fazer escolher para onde mover
     valid_moves(GameState, _-RowPiece-ColumnPiece, ListAdjacentMoves-ListEatMoves),
-    write(ListAdjacentMoves), nl,write(ListEatMoves),nl,nl,
-   % trace,
     random(1,2,RList),
     choose_list(ListAdjacentMoves-ListEatMoves,RList,List),
     length(List,N),
     get_random(N,R),
     nth1(R,List,Move),
     Move=[Row,Column].
-  %  notrace.
 
 choose_list(ListAdjacentMoves-_,1,ListAdjacentMoves).
 choose_list(_-ListEatMoves,2,ListEatMoves).
