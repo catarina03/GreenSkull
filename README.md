@@ -70,10 +70,18 @@ Ao acabar o jogo, é impresso um menu onde aparece Game Over, as pontuações de
 
 **Menus iniciais**
 
+<img src="./images/menu1.png" alt="menu" width="300" height="300"/> 
+<img src="./images/menu2.png" alt="menu" width="300" height="300"/> 
+
+
 **Estado inicial do jogo:**  
-<img src="./images/initalBoard.png" alt="initial board" width="300" height="300"/> 
+
+<img src="./images/inicial.png" alt="initial board" width="300" height="300"/> 
 
 **Menu final com as pontuações e o vencedor**
+
+<img src="./images/gameover.png" alt="initial board" width="600"/> 
+
 
 ## **Lista de Jogadas Válidas:**
 Para a obtenção das jogadas  válidas usamos o predicado **valid_moves**, que retorna 2 listas: uma para jogadas para casas adjacentes e outra para as jogadas que envolvem comer peças adversárias. Para as jogadas para casas adjacentes usamos o predicado **get_adjacent_move** que verifica as casas adjacentes disponiveis em todas as direções. Para as jogadas onde come as peças adversárias, **get_move_eat** verifica para todas as direções se é possivel comer uma ou mais peças adversárias.
