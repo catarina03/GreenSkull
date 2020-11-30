@@ -63,4 +63,3 @@ get_right_diagonal(_,_,11,[]).
 get_random(N,R):-random(1,N,R).
 get_random(1,1).
 
-
