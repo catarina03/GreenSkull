@@ -59,4 +59,8 @@ get_right_diagonal(GameState,Indice,N,[L1|R]):-
     get_right_diagonal(GameState,Indice,N1,R).
 get_right_diagonal(_,_,11,[]).
 
+% Generates random numbers between N  and R
+get_random(N,R):-random(1,N,R).
+get_random(1,1).
+
 

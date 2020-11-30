@@ -1,3 +1,4 @@
+% Starts game
 pc_human:-
     initial(GameState-Player-GreenSkull),
     write('               Choose Orcs level:     '),nl,
@@ -35,6 +36,5 @@ nextPH(Player,GameState-[PO1,PG1,PZ1],GreenSkull,Level):-
     set_next_player(Player, NextPlayer),
     write(NextPlayer),
     play_pc_human_game(GameState-[PO1,PG1,PZ1], NextPlayer, GreenSkull,Level).
-
 nextPH(_,_-_,_,_).
 

@@ -1,3 +1,4 @@
+% Starts game
 human_pc:-
     initial(GameState-Player-GreenSkull),
     write('               Choose Goblins level:     '),nl,
@@ -9,7 +10,6 @@ human_pc:-
 %Turn: Orcs==HUMAN
 play_human_pc_game(GameState-[PO,PG,PZ],o,GreenSkull,LevelG):-
     display_game(GameState-GreenSkull,o),
-    trace,
     choose_piece(GameState,o,RowPiece,ColumnPiece),
     move_human_piece(GameState-[PO,PG,PZ]-o-GreenSkull, RowPiece-ColumnPiece, NewGameState-[PO1,PG1,PZ1]-FinalGreenSkull),
     nextHP(o,NewGameState-[PO1,PG1,PZ1],FinalGreenSkull,LevelG).
@@ -37,5 +37,4 @@ nextHP(Player,GameState-[PO1,PG1,PZ1],GreenSkull,Level):-
     set_next_player(Player, NextPlayer),
     write(NextPlayer),
     play_human_pc_game(GameState-[PO1,PG1,PZ1], NextPlayer, GreenSkull,Level).
-
 nextHP(_,_-_,_,_).
