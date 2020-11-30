@@ -1,4 +1,5 @@
 :-use_module(library(random)).
+:-include('game.pl').
 
 pc_pc:-
     initial(GameState-Player-GreenSkull),
@@ -20,8 +21,8 @@ levelPlayer(Level):-
 play_game(GameState-[PO,PG,PZ],Player,GreenSkull,LevelO-LevelG):-
     display_game(GameState-GreenSkull,Player),
     choose_level_round(Player,GreenSkull,LevelO-LevelG,Level),
-    choose_move(GameState, Player,Level,Move)​,
-    move(GameState-[PO,PG,PZ]-Player,Move, NewGameState-[PO1,PG1,PZ1]-ListEat),
+    choose_move(GameState, Player,Level,Move),
+    move(GameState-[PO,PG,PZ]-Player,Move, NewGameState-[PO1,PG1,PZ1]-_),
     next(Player,NewGameState-[PO1,PG1,PZ1],GreenSkull,LevelO,LevelG).
 
 
@@ -60,8 +61,7 @@ valid_pieces(GameState,Player,List):-
 
 %muda as linhas
 find_pieces(GameState,Player,NRow,[L1|R]):-
-    NRow=<10,
-    nth1(NRow,GameState,Row),
+    nth1(NRow,GameState,Row), 
     member(Player,Row),
     getCoordenates(Row,NRow-1,Player,L1),
     NewNRow is NRow+1,
@@ -71,23 +71,26 @@ find_pieces(_,_,11,[]).
 
 find_pieces(_,_,NRow,[_|R]):- 
     NewNRow is NRow+1,
-    find_pieces(GameState,Player,NewNRow,R)
+    find_pieces(GameState,Player,NewNRow,R).
 
 %muda as colunas
 getCoordenates(Row,NRow-NColumn,Player,[L1|R]):-
+    write(NColumn),write(NRow),
     NColumn=<NRow,
     nth1(NColumn,Row,Elem),
-    Elem==Player,
+    Elem==Player,!,
+    write('aqui'),
     L1=[NRow,NColumn],
     NewNColumn is NColumn+1,
     getCoordenates(Row,NRow-NewNColumn,Player,R).
 
-getCoordenates(_,NRow-NColumn,_,L):-
+getCoordenates(_,NRow-NColumn,_,[]):-
     NextNRow is NRow+1,
     NColumn==NextNRow,
-    L=[].
+    write('aquiii').
 
 getCoordenates(Row,NRow-NColumn,Player,[_|R]):-
+    write('aquii'),
     NewNColumn is NColumn+1,
     getCoordenates(Row,NRow-NewNColumn,Player,R).
 
@@ -110,5 +113,5 @@ choose_list(_-ListEatMoves,2,ListEatMoves).
 
 
 %using greedy algorithm:
-choose_move(GameState,Player,2,Move):-
+choose_move(GameState,Player,2,Move).
     %https://www.cs.unm.edu/~luger/ai-final/code/PROLOG.best.html
