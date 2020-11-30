@@ -63,17 +63,20 @@ A representação de cada especie é feita da seguinte maneira:
 **Player** e **GreenSkull** são representados por um átomo que pode ser **g** ou **o**.  
 
 ## **Visualização do estado de jogo:**
-O predicado de visualização do estado do jogo é **display_game** e recebe dois argumentos, um argumento composto **GameState-GreenSkull** e um argumento **Player**.  
+Ao começar o jogo com o predicado **play**, é impresso um menu onde aparece as instruções/objetivos sobre o jogo e uma opção para jogar. Após escolher a opção de jogar, é impresso outro menu com as várias opções de jogo. Tendo sido escolhida a opção de jogo, o predicado de visualização do estado do jogo é **display_game** que recebe dois argumentos, um argumento composto **GameState-GreenSkull** e um argumento **Player**.  
 O predicado começa por chamar o predicado **print_board**, que escreve na consola o tabuleiro, linha a linha (predicado **print_row**) com a respetiva numeração da linha e formatação (predicado **space**).  
 Depois imprime a númeração das colunas (predicado **display_column_numbers**) e de quem é a vez de jogar, juntamente com quem tem a Green Skull (predicados **display_green_skull** e **display_player_turn** respetivamente).
+Ao acabar o jogo, é impresso um menu onde aparece Game Over, as pontuações de cada espécie e a espécie vencedora.
 
-# TO DO atualizar imagens.
+**Menus iniciais**
+
 **Estado inicial do jogo:**  
 <img src="./images/initalBoard.png" alt="initial board" width="300" height="300"/> 
-<img src="./images/initialBoardSicstus.png" alt="initial board in console" width="300" height="300"/> 
+
+**Menu final com as pontuações e o vencedor**
 
 ## **Lista de Jogadas Válidas:**
-Para a obtenção das jogadas  válidas usamos o predicado **valid_moves**, que retorna 2 listas: uma para jogadas para casas adjacentes e outra para as jogadas que envolvem comer peças adversárias. Para as jogadas para casas adjacentes usamos o predicado **get_adjacent_move** que verifica as casas adjacentes disponiveis em todas as direções. Para as jogadas onde come as peças adversárias, **get_move_eat** verifica para todas as direções se é possivel comer uma ou mais peças adversárias.mo
+Para a obtenção das jogadas  válidas usamos o predicado **valid_moves**, que retorna 2 listas: uma para jogadas para casas adjacentes e outra para as jogadas que envolvem comer peças adversárias. Para as jogadas para casas adjacentes usamos o predicado **get_adjacent_move** que verifica as casas adjacentes disponiveis em todas as direções. Para as jogadas onde come as peças adversárias, **get_move_eat** verifica para todas as direções se é possivel comer uma ou mais peças adversárias.
 
 ## **Execução de Jogadas:**
 A execução das jogadas é feita atravé do predicado **move**. Aqui vemos todas as jogadas válidas que o jogador pode fazer com com a peça escolhida e verificamos se a jogada pretendida está contida nessa lista. Caso esteja, então mudamos o estado do tabuleiro (predicado **change_board**) assim como as pontuações de cada espécie (**change_score**).
@@ -81,15 +84,14 @@ A execução das jogadas é feita atravé do predicado **move**. Aqui vemos toda
 ## **Final do Jogo:** 
 Na passagem à próxima jogada através do predicado **next**, verificamos se chegamos ao fim do jogo através do predicado **game_over**,que só retornará ao next caso não tenhamos chegado ao fim. Para a verificação usamos o **is_over**, que percorre o GameState a fim de encontrar uma situação de final de jogo. Caso seja encontrado, prosseguirá para **final_scores**, que retorna as pontuação final do jogo, consoante o ultimo estado e seguidamente irá para o **get_winner** que retorna o vencedor consoante a pontuação final.
 
-## **Avaliação do Tabuleiro:**
-Forma(s) de avaliação do estado do jogo. O predicado deve chamar-se ​value(+GameState, +Player, -Value)​.
-
 ## **Jogada do Computador:**
-Escolha da jogada a efetuar pelo computador, dependendo do nível de dificuldade. O predicado deve chamar-se choose_move(+GameState, +Player, +Level, -Move).
+A jogada do computador é feita através do predicado **choose_move**, que recebe o GameState, Player e o nível de dificuldade e retorna o moviemento que vai fazer. O movimento é composto por: RowPiece-ColumnPiece-Row-Column. O predicado **find_piece** retorna a peça que vai ser movimentada (RowPiece,ColumnPiece) e **find_move** retorna para onde vai a peça. O nivel de dificuldade implementada foi o **facíl**, sendo a procura das linhas e colunas utilizadas por um **random**, verificando sempre se é valido ou não.
 
 ## **Conclusões:**
-Conclusões do trabalho, incluindo limitações do trabalho desenvolvido ​knownissues​), assim como possíveis melhorias identificadas (​roadmap​).
-(até 250 palavras)
-
+O trabalho desenvolvido teve como objetivo a aprendizagem da liguagem Prolog e da programação lógica por trás de um jogo.
+Durante a implementação do trabalho, surgiram algumas dúvidas envolvendo a lógica do jogo e a maneira mais eficaz para a sua implementação.
+A nivel do desenvolvimento do trabalho poderão existir alguns problemas nas jogadas da terceira espécie (Zombies) nos modos de jogo humano VS pc e pc VS humano. Quanto aos níveis de dificuldades só existe o nivel facíl.
+Para uma melhoria do jogo poderiamos ter implementado um algoritmo greedy para aumentar o nivel de dificuldade.
+  
 ## **Bibliografia:**
-    Listagem de livros, artigos,páginas Web e outros recursos usados durante o desenvolvimento do trabalho
+* [Manual do Sicstus](https://sicstus.sics.se/sicstus/docs/latest4/pdf/sicstus.pdf)
