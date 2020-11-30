@@ -1,5 +1,5 @@
 :-use_module(library(random)).
-%:-include('game.pl').
+:-use_module(library(system)).
 
 pc_pc:-
     initial(GameState-Player-GreenSkull),nl,
@@ -23,7 +23,13 @@ play_game(GameState-[PO,PG,PZ],Player,GreenSkull,LevelO-LevelG):-
     choose_level_round(Player,GreenSkull,LevelO-LevelG,Level),
     choose_move(GameState, Player,Level,Move),
     move(GameState-[PO,PG,PZ]-Player,Move, NewGameState-[PO1,PG1,PZ1]-_),
+    trace,
+    nl, write('Player: '), write(Player), nl,
+    write('Start position - End position: ['), write(Move), write(']'),
+    % trace,
+    sleep(2),
     next(Player,NewGameState-[PO1,PG1,PZ1],GreenSkull,LevelO,LevelG).
+    % trace.
 
 
 choose_level_round(o,_,LO-_,Level):-Level=LO.
@@ -81,7 +87,7 @@ getCoordinates(Row,NRow-NColumn,Player,List,FinalList):-
     Elem==Player,!,
     append(List,[[NRow,NColumn]],NewList),
     NewNColumn is NColumn+1,
-    getCoordinates(Row,NRow-NewNColumn,Player,List2,AlmostList),
+    getCoordinates(Row,NRow-NewNColumn,Player,[],AlmostList),
     append(NewList,AlmostList,FinalList).
 
 getCoordinates(_,NRow-NColumn,_,_,[]):-
@@ -100,9 +106,9 @@ find_move(GameState,RowPiece-ColumnPiece,Row-Column):-
     random(1,2,RList),
     choose_list(ListAdjacentMoves-ListEatMoves,RList,List),
     length(List,N),
-    get_random(N,R),
-    nth1(R,List,Move),
-    Move=[Row,Column].
+    random_member(Move, List),
+    [Row, Column] = Move.
+
 
 choose_list(ListAdjacentMoves-_,1,ListAdjacentMoves).
 choose_list(_-ListEatMoves,2,ListEatMoves).
@@ -114,5 +120,5 @@ get_random(1,1).
     
 
 %using greedy algorithm:
-choose_move(GameState,Player,2,Move).
+%choose_move(GameState,Player,2,Move).
     %https://www.cs.unm.edu/~luger/ai-final/code/PROLOG.best.html
