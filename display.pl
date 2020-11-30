@@ -8,12 +8,11 @@
 % Player - who plays this turn
 % GreenSkull - who has the Green Skull
 display_game(GameState-GreenSkull, Player) :-
-    nl,nl,print_board(GameState,0),
-    hex_code(10,C),write(C),nl,nl,
-    write('                          z o m b i e s'),nl,
-    display_column_numbers,
+    display_board(GameState),
     display_green_skull(GreenSkull), 
     display_player_turn(Player),
+    value(GameState,Player,Value),
+    display_value(Player,Value),
     nl, nl.
 
 
@@ -206,3 +205,31 @@ display_winner(g-z):-
 display_game_over :- 
     nl, 
     write('                        G A M E  O V E R'),nl,nl.
+
+% -------------------------------- Value Menu ---------------------------------
+
+% Displays value information
+display_value(o,Value):-
+    nl,nl,
+    write('                             V A L U E       '),nl,
+    write('               ---------------------------------'),nl,
+    
+    write('                        ORCS: '), write(Value),nl,
+    write('               ---------------------------------'),nl,
+    nl,nl.
+
+display_value(g,Value):-
+    nl,nl,
+    write('                             V A L U E       '),nl,
+    write('               ---------------------------------'),nl,
+    write('                        GOBLINS: '), write(Value),nl,
+    write('               ---------------------------------'),nl,
+    nl,nl.
+
+display_value(z,Value):-
+    nl,nl,
+    write('                             V A L U E       '),nl,
+    write('               ---------------------------------'),nl,
+    write('                        ZOMBIES: '), write(Z),nl,
+    write('               ---------------------------------'),nl,
+    nl,nl.

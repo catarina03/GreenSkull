@@ -220,7 +220,35 @@ change_green_skull(e, _, GreenSkull, NewGreenSkull) :-
 change_green_skull(a, _, GreenSkull, NewGreenSkull) :-
     NewGreenSkull = GreenSkull.
 
-% Escolhe o nivel em que o pc vai jogar
+% Choose pc's game level 
 get_level(Level):-
     display_level,
     read(Level),nl,nl.    
+
+% Calculates Player's value
+value(GameState, o, Value):-
+    find_pieces(GameState,o,1,[],OList),
+    find_pieces(GameState,g,1,[],GList),
+    find_pieces(GameState,z,1,[],ZList),
+    length(OList,O),
+    length(GList,G),
+    length(ZList,Z),
+    Value is O/(G+Z).
+
+value(GameState, g, Value):-
+    find_pieces(GameState,o,1,[],OList),
+    find_pieces(GameState,g,1,[],GList),
+    find_pieces(GameState,z,1,[],ZList),
+    length(OList,O),
+    length(GList,G),
+    length(ZList,Z),
+    Value is G/(O+Z).
+
+value(GameState, z, Value):-
+    find_pieces(GameState,o,1,[],OList),
+    find_pieces(GameState,g,1,[],GList),
+    find_pieces(GameState,z,1,[],ZList),
+    length(OList,O),
+    length(GList,G),
+    length(ZList,Z),
+    Value is Z/(G+O).
