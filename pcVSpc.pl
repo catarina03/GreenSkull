@@ -7,7 +7,7 @@ pc_pc:-
     get_level(LevelO),
     write('               Choose Goblins level:     '),nl,nl,
     get_level(LevelG),
-    play_game(GameState-[0,0,0],Player,GreenSkull,LevelO-LevelG).
+    play_game(GameState-[0,0,0],Player,GreenSkull,LevelO-LevelG), trace.
 
 get_level(Level):-
     write('                  |         L E V E L       |'),nl,
@@ -21,15 +21,17 @@ get_level(Level):-
 play_game(GameState-[PO,PG,PZ],Player,GreenSkull,LevelO-LevelG):-
     display_game(GameState-GreenSkull,Player),
     choose_level_round(Player,GreenSkull,LevelO-LevelG,Level),
-    choose_move(GameState, Player,Level,Move),
-    move(GameState-[PO,PG,PZ]-Player,Move, NewGameState-[PO1,PG1,PZ1]-_),
-    trace,
+    choose_move(GameState, Player,Level,RowPiece-ColumnPiece-Row-Column),
+    move(GameState-[PO,PG,PZ]-Player-GreenSkull, RowPiece-ColumnPiece-Row-Column-MoveType, NewGameState-[PO1,PG1,PZ1]-ListEat-NewGreenSkull),
+    play_again(NewGameState-[PO1,PG1,PZ1], ListEat, Player-[Row, Column]-MoveType, NewerGameState-[PO2,PG2,PZ2]),
+    %play_zombies(NewerGameState-[PO2,PG2,PZ2]-Player-NewGreenSkull, _-_-RowZombie-ColumnZombie-MoveTypeZombie, NewZombieGameState-[PO3,PG3,PZ3]-ListEatZombie-NewerGreenSkull),
+    %play_again_zombies(NewZombieGameState-[PO3,PG3,PZ3]-NewerGreenSkull, ListEatZombie, Player-[RowZombie, ColumnZombie]-MoveTypeZombie, FinalGameState-[POF,PGF,PZF]-NewestGreenSkull),
+    %change_green_skull(MoveTypeZombie, Player, NewestGreenSkull, FinalGreenSkull)
     nl, write('Player: '), write(Player), nl,
-    write('Start position - End position: ['), write(Move), write(']'),
-    % trace,
-    sleep(2),
-    next(Player,NewGameState-[PO1,PG1,PZ1],GreenSkull,LevelO,LevelG).
-    % trace.
+    write('Start position - End position: ['), write(RowPiece-ColumnPiece-Row-Column), write(']'), 
+    sleep(5),
+    % change_score([PO,PG,PZ]-Player, )
+    next(Player,NewerGameState-[PO2,PG2,PZ2],NewGreenSkull,LevelO,LevelG).
 
 
 choose_level_round(o,_,LO-_,Level):-Level=LO.
@@ -46,10 +48,9 @@ next(Player,GameState-[PO1,PG1,PZ1],GreenSkull,LevelO,LevelG):-
 
 next(_,_-_,_,_,_).
 %using random:
-choose_move(GameState,Player,1,Move):-
+choose_move(GameState,Player,1, RowPiece-ColumnPiece-Row-Column):-
     find_piece(GameState,Player,RowPiece-ColumnPiece),
-    find_move(GameState,RowPiece-ColumnPiece,Row-Column),
-    Move=RowPiece-ColumnPiece-Row-Column.
+    find_move(GameState,RowPiece-ColumnPiece,Row-Column).
 
 find_piece(GameState,Player,RowPiece-ColumnPiece):-
     %encontrar lista onde estão as peças ou as peças disponiveis para usar
@@ -57,8 +58,7 @@ find_piece(GameState,Player,RowPiece-ColumnPiece):-
     length(List,N),
     %fazer random para fazer escolher peça a mover
     get_random(N,R),
-    nth1(R,List,Piece),
-    Piece=[RowPiece,ColumnPiece],
+    nth1(R,List,[RowPiece,ColumnPiece]),
     valid_piece(GameState,Player,RowPiece,ColumnPiece),!.
 
 %Return all coordenates of Player
@@ -75,7 +75,6 @@ find_pieces(GameState,Player,NRow,List,FinalList):-
     append(List2,AlmostList,FinalList).
 
 find_pieces(_,_,11,_,[]).
-
 find_pieces(GameState,Player,NRow,List,FinalList):- 
     NewNRow is NRow+1,
     find_pieces(GameState,Player,NewNRow,List,FinalList).
@@ -105,7 +104,6 @@ find_move(GameState,RowPiece-ColumnPiece,Row-Column):-
     valid_moves(GameState, _-RowPiece-ColumnPiece, ListAdjacentMoves-ListEatMoves),
     random(1,2,RList),
     choose_list(ListAdjacentMoves-ListEatMoves,RList,List),
-    length(List,N),
     random_member(Move, List),
     [Row, Column] = Move.
 

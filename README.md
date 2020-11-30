@@ -8,9 +8,9 @@
     - Jéssica Mireie Fernandes Nascimento (up201806723)
 
 ## **Instalação e Execução:**
-    Para iniciar o jogo, será necessário iniciar o sicstus e fazer consult('game.pl').
-    Após consultar o ficheiro, basta colocar na linha de comandos o seguinte predicado: play.
-    Após fazer o play, irá aparecer um menu onde poderá escolher entre ver instruções ou jogar, ao escolher jogar, poderá escolher o modo de jogo.
+ Para iniciar o jogo, será necessário iniciar o sicstus e fazer consult('game.pl').
+ Após consultar o ficheiro, basta colocar na linha de comandos o seguinte predicado: play.
+ Após fazer o play, irá aparecer um menu onde poderá escolher entre ver instruções ou jogar, ao escolher jogar, poderá escolher o modo de jogo.
 
 ## **Descrição do jogo:**
 - Jogo composto por 2 jogadores: um a representar os Orcs e o outro, os Goblins.
@@ -73,19 +73,19 @@ Depois imprime a númeração das colunas (predicado **display_column_numbers**)
 <img src="./images/initialBoardSicstus.png" alt="initial board in console" width="300" height="300"/> 
 
 ## **Lista de Jogadas Válidas:**
-Obtenção de lista com jogadas possíveis. O predicado deve chamar-se ​valid_moves(+GameState, +Player, -ListOfMoves)​.
+Para a obtenção das jogadas  válidas usamos o predicado **valid_moves**, que retorna 2 listas: uma para jogadas para casas adjacentes e outra para as jogadas que envolvem comer peças adversárias. Para as jogadas para casas adjacentes usamos o predicado **get_adjacent_move** que verifica as casas adjacentes disponiveis em todas as direções. Para as jogadas onde come as peças adversárias, **get_move_eat** verifica para todas as direções se é possivel comer uma ou mais peças adversárias.mo
 
 ## **Execução de Jogadas:**
-Validação e execução de uma jogada, obtendo o novo estado do jogo. O predicado deve chamar-se ​move(+GameState,+Move,-NewGameState)​.
+A execução das jogadas é feita atravé do predicado **move**. Aqui vemos todas as jogadas válidas que o jogador pode fazer com com a peça escolhida e verificamos se a jogada pretendida está contida nessa lista. Caso esteja, então mudamos o estado do tabuleiro (predicado **change_board**) assim como as pontuações de cada espécie (**change_score**).
  
 ## **Final do Jogo:** 
 Na passagem à próxima jogada através do predicado **next**, verificamos se chegamos ao fim do jogo através do predicado **game_over**,que só retornará ao next caso não tenhamos chegado ao fim. Para a verificação usamos o **is_over**, que percorre o GameState a fim de encontrar uma situação de final de jogo. Caso seja encontrado, prosseguirá para **final_scores**, que retorna as pontuação final do jogo, consoante o ultimo estado e seguidamente irá para o **get_winner** que retorna o vencedor consoante a pontuação final.
 
-## **Avaliação do Tabuleiro: **
+## **Avaliação do Tabuleiro:**
 Forma(s) de avaliação do estado do jogo. O predicado deve chamar-se ​value(+GameState, +Player, -Value)​.
 
 ## **Jogada do Computador:**
-Escolha da jogada a efetuar pelo computador, dependendo do nível de dificuldade. O predicado deve chamar-se choose_move(+GameState, +Player, +Level, -Move)​.
+Escolha da jogada a efetuar pelo computador, dependendo do nível de dificuldade. O predicado deve chamar-se choose_move(+GameState, +Player, +Level, -Move).
 
 ## **Conclusões:**
 Conclusões do trabalho, incluindo limitações do trabalho desenvolvido ​knownissues​), assim como possíveis melhorias identificadas (​roadmap​).
