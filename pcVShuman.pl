@@ -11,7 +11,7 @@ play_pc_human_game(GameState-[PO,PG,PZ],g,GreenSkull,LevelO):-
     display_game(GameState-GreenSkull,g),
     choose_piece(GameState,g,RowPiece,ColumnPiece),
     move_human_piece(GameState-[PO,PG,PZ]-g-GreenSkull, RowPiece-ColumnPiece, NewGameState-[PO1,PG1,PZ1]-FinalGreenSkull),
-    nextPH(o,NewGameState-[PO1,PG1,PZ1],FinalGreenSkull,LevelÕ).
+    nextPH(o,NewGameState-[PO1,PG1,PZ1],FinalGreenSkull,LevelO).
     
 
 %Turn: Orcs==PC
@@ -23,7 +23,7 @@ play_pc_human_game(GameState-[PO,PG,PZ],o,GreenSkull,LevelO):-
     write('Start position - End position: ['), write(RowPiece-ColumnPiece-Row-Column), write(']'), nl,
 
     play_again_bot(NewGameState-[PO1,PG1,PZ1], ListEat, o-[Row, Column]-MoveType, NewerGameState-[PO2,PG2,PZ2]),
-    play_zombies_bot(LevelG, NewerGameState-[PO2,PG2,PZ2]-o-NewGreenSkull, _-_-RowZombie-ColumnZombie-MoveTypeZombie, NewZombieGameState-[PO3,PG3,PZ3]-ListEatZombie-NewerGreenSkull),
+    play_zombies_bot(LevelO, NewerGameState-[PO2,PG2,PZ2]-o-NewGreenSkull, _-_-RowZombie-ColumnZombie-MoveTypeZombie, NewZombieGameState-[PO3,PG3,PZ3]-ListEatZombie-NewerGreenSkull),
     play_again_zombies(NewZombieGameState-[PO3,PG3,PZ3]-NewerGreenSkull, ListEatZombie, o-[RowZombie, ColumnZombie]-MoveTypeZombie, FinalGameState-[POF,PGF,PZF]-NewestGreenSkull),
     sleep(5),
     nextPH(g,FinalGameState-[POF,PGF,PZF],NewestGreenSkull,LevelO).
