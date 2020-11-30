@@ -97,8 +97,10 @@ Na passagem à próxima jogada através do predicado **next**, verificamos se ch
 
 
 ## **Avaliação do Tabuleiro:**
-A cada display do tabuleiro de jogo, invocamos um predicado **value** para mostrar, em tempo real, a avaliação do tabuleiro. 
+A cada display do tabuleiro de jogo, invocamos um predicado **value** para mostrar, em tempo real, a avaliação do tabuleiro. O método que usamos para calcular o value é a quantidade de peças de cada espécie que estão em jogo no tabuleiro.
 
+<img src="./images/value_code.png" alt="value code"/>  
+<img src="./images/display_value.png" alt="display value"/>  
 
 ## **Jogada do Computador:**
 A jogada do computador é feita através do predicado **choose_move**, que recebe o GameState, Player e o nível de dificuldade e retorna o moviemento que vai fazer. O movimento é composto por: RowPiece-ColumnPiece-Row-Column. O predicado **find_piece** retorna a peça que vai ser movimentada (RowPiece,ColumnPiece) e **find_move** retorna para onde vai a peça. O nivel de dificuldade implementada foi o **facíl**, sendo a procura das linhas e colunas utilizadas por um algoritmo **random**, verificando sempre se é valido ou não.
