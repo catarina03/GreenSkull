@@ -63,7 +63,7 @@ valid_pieces(GameState,Player,List):-
 find_pieces(GameState,Player,NRow,[L1|R]):-
     nth1(NRow,GameState,Row), 
     member(Player,Row),
-    getCoordenates(Row,NRow-1,Player,L1),
+    getCoordinates(Row,NRow-1,Player,L1),
     NewNRow is NRow+1,
     find_pieces(GameState,Player,NewNRow,R).
 
@@ -74,25 +74,29 @@ find_pieces(_,_,NRow,[_|R]):-
     find_pieces(GameState,Player,NewNRow,R).
 
 %muda as colunas
-getCoordenates(Row,NRow-NColumn,Player,[L1|R]):-
-    write(NColumn),write(NRow),
+getCoordinates(Row,NRow-NColumn,Player,List,FinalList):-
+    write(NColumn),write(NRow),nl,
     NColumn=<NRow,
     nth1(NColumn,Row,Elem),
     Elem==Player,!,
-    write('aqui'),
-    L1=[NRow,NColumn],
+    append(List,[[NRow,NColumn]],NewList),
     NewNColumn is NColumn+1,
-    getCoordenates(Row,NRow-NewNColumn,Player,R).
+    getCoordinates(Row,NRow-NewNColumn,Player,List2,AlmostList),
+    write(List2),nl, write(AlmostList),nl,nl,
+    append(NewList,AlmostList,FinalList).
 
-getCoordenates(_,NRow-NColumn,_,[]):-
+getCoordinates(_,NRow-NColumn,_,_,[]):-
     NextNRow is NRow+1,
     NColumn==NextNRow,
-    write('aquiii').
+    %FinalList=[],
+    write('aquiii'),nl.
 
-getCoordenates(Row,NRow-NColumn,Player,[_|R]):-
-    write('aquii'),
+getCoordinates(Row,NRow-NColumn,Player,List,FinalList):-
+    write('aquii'),nl,
     NewNColumn is NColumn+1,
-    getCoordenates(Row,NRow-NewNColumn,Player,R).
+    getCoordinates(Row,NRow-NewNColumn,Player,List,FinalList).
+
+
 
 
 find_move(GameState,RowPiece-ColumnPiece,Row-Column):-
