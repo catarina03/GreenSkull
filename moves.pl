@@ -12,13 +12,13 @@ move(GameState-[PO,PG,PZ]-Player-GreenSkull,RowPiece-ColumnPiece-Row-Column-Move
     get_move_eat(Row, Column, ListEat, NewGameState).
 
 
-zombie_move(GameState-[PO,PG,PZ]-Player-GreenSkull,RowPiece-ColumnPiece-Row-Column-MoveType, NewGameState-[PO1,PG1,PZ1]-ListEat-NewGreenSkull, y) :-
+zombie_move(GameState-[PO,PG,PZ]-Player-GreenSkull, RowPiece-ColumnPiece-Row-Column-MoveType, NewGameState-[PO1,PG1,PZ1]-ListEat-NewGreenSkull, y) :-
     valid_moves(GameState, z-RowPiece-ColumnPiece, LAM-LEM),
     is_valid_move(GameState, LAM-LEM, [Row, Column], MoveType),
-    change_green_skull(MoveType, Player, GreenSkull, NewGreenSkull),
     change_board(GameState, RowPiece-ColumnPiece, Row-Column, NewGameState, ElemEaten),
     change_score([PO,PG,PZ]-Player-ElemEaten,[PO1,PG1,PZ1]),
-    get_move_eat(Row, Column, ListEat, NewGameState).
+    get_move_eat(Row, Column, ListEat, NewGameState),
+    NewGreenSkull = GreenSkull.
 
 zombie_move(GameState-[PO,PG,PZ]-_-GreenSkull, _, NewGameState-[PO1,PG1,PZ1]-ListEat-NewGreenSkull, n) :-
     NewGameState = GameState,
@@ -55,21 +55,21 @@ valid_piece(GameState,z,Row,Column):-
 
 % --------------------------------------------------------------------------------
 
-play_again(GameState-[PO,PG,PZ], [], _, FinalGameState-[POF,PGF,PZ]) :-
+play_again(GameState-[PO,PG,PZ], [], _, FinalGameState-[POF,PGF,PZF]) :-
     FinalGameState = GameState,
-    [POF,PGF,PZ] = [PO,PG,PZ].
+    [POF,PGF,PZF] = [PO,PG,PZ].
 
-play_again(GameState-[PO,PG,PZ], ListEat, Player-[Row, Column]-e, FinalGameState-[POF,PGF,PZ]) :-
+play_again(GameState-[PO,PG,PZ], ListEat, Player-[Row, Column]-e, FinalGameState-[POF,PGF,PZF]) :-
     input_message('Play again? [y/n]', Response),
-    checks_play_again(GameState-[PO,PG,PZ], ListEat, Player-[Row, Column]-e, FinalGameState-[POF,PGF,PZ], Response).
+    checks_play_again(GameState-[PO,PG,PZ], ListEat, Player-[Row, Column]-e, FinalGameState-[POF,PGF,PZF], Response).
 
-play_again(GameState-[PO,PG,PZ], _, _, FinalGameState-[POF,PGF,PZ]) :-
+play_again(GameState-[PO,PG,PZ], _, _, FinalGameState-[POF,PGF,PZF]) :-
     FinalGameState = GameState,
-    [POF,PGF,PZ] = [PO,PG,PZ].
+    [POF,PGF,PZF] = [PO,PG,PZ].
 
 
 
-checks_play_again(GameState-[PO,PG,PZ], ListEat, Player-[Row, Column]-e, FinalGameState-[POF,PGF,PZ], y) :-
+checks_play_again(GameState-[PO,PG,PZ], ListEat, Player-[Row, Column]-e, FinalGameState-[POF,PGF,PZF], y) :-
     display_board(GameState),
     input_play('Where to go:',RowInput,ColumnInput),
     is_member([RowInput, ColumnInput], ListEat),
@@ -78,7 +78,7 @@ checks_play_again(GameState-[PO,PG,PZ], ListEat, Player-[Row, Column]-e, FinalGa
     change_board(GameState, Row-Column, RowInput-ColumnInput, NewGameState, ElemEaten),
     change_score([PO,PG,PZ]-Player-ElemEaten,[PO1,PG1,PZ1]),
     get_move_eat(RowInput, ColumnInput, NewListEat, NewGameState),
-    play_again(NewGameState-[PO1,PG1,PZ1], NewListEat, Player-[RowInput, ColumnInput]-e, FinalGameState-[POF,PGF,PZ]).
+    play_again(NewGameState-[PO1,PG1,PZ1], NewListEat, Player-[RowInput, ColumnInput]-e, FinalGameState-[POF,PGF,PZF]).
 
 
 checks_play_again(GameState-[PO,PG,PZ], _, _, FinalGameState-[POF,PGF,PZF], n) :-
@@ -92,11 +92,12 @@ play_again_zombies(GameState-[PO,PG,PZ]-GreenSkull, [], _, FinalGameState-[POF,P
     [POF,PGF,PZF] = [PO,PG,PZ],
     NewGreenSkull = GreenSkull.
 
-play_again_zombies(GameState-[PO,PG,PZ]-GreenSkull, ListEat, Player-[Row, Column]-e, FinalGameState-[POF,PGF,PZ]-NewGreenSkull) :-
+play_again_zombies(GameState-[PO,PG,PZ]-GreenSkull, ListEat, Player-[Row, Column]-e, FinalGameState-[POF,PGF,PZF]-NewGreenSkull) :-
+    write('Green skull: '), write(GreenSkull), nl, 
     GreenSkull == Player,
     input_message('Play again with zombie? [y/n]', Response),
-    checks_play_again(GameState-[PO,PG,PZ], ListEat, Player-[Row, Column]-e, FinalGameState-[POF,PGF,PZ], Response),
-    change_green_skull(GreenSkull, NewGreenSkull).
+    checks_play_again(GameState-[PO,PG,PZ], ListEat, Player-[Row, Column]-e, FinalGameState-[POF,PGF,PZF], Response),
+    change_green_skull(e, Player, GreenSkull, NewGreenSkull).
 
 play_again_zombies(GameState-[PO,PG,PZ]-GreenSkull, _, _, FinalGameState-[POF,PGF,PZF]-NewGreenSkull) :-
     FinalGameState = GameState,
@@ -128,6 +129,7 @@ change_green_skull(a, _, GreenSkull, NewGreenSkull) :-
 play_zombies(GameState-[PO,PG,PZ]-Player-GreenSkull,RowPiece-ColumnPiece-Row-Column-MoveType, NewGameState-[PO1,PG1,PZ1]-ListEat-NewGreenSkull) :-
     GreenSkull == Player,
     input_message('Play with a zombie? [y/n]', Response),
+    display_board(GameState),
     choose_piece(GameState,z,RowPiece,ColumnPiece),
     input_play('Where to:',Row,Column),
     zombie_move(GameState-[PO,PG,PZ]-Player-GreenSkull,RowPiece-ColumnPiece-Row-Column-MoveType, NewGameState-[PO1,PG1,PZ1]-ListEat-NewGreenSkull, Response).
@@ -149,9 +151,9 @@ move_human_piece(GameState-[PO,PG,PZ]-Player-GreenSkull,RowPiece-ColumnPiece,Fin
     input_play('Where to:',Row,Column),
     move(GameState-[PO,PG,PZ]-Player-GreenSkull, RowPiece-ColumnPiece-Row-Column-MoveType, NewGameState-[PO1,PG1,PZ1]-ListEat-NewGreenSkull),
     play_again(NewGameState-[PO1,PG1,PZ1], ListEat, Player-[Row, Column]-MoveType, NewerGameState-[PO2,PG2,PZ2]),
-
     play_zombies(NewerGameState-[PO2,PG2,PZ2]-Player-NewGreenSkull, _-_-RowZombie-ColumnZombie-MoveTypeZombie, NewZombieGameState-[PO3,PG3,PZ3]-ListEatZombie-NewerGreenSkull),
-    play_again_zombies(NewZombieGameState-[PO3,PG3,PZ3]-NewerGreenSkull, ListEatZombie, Player-[RowZombie, ColumnZombie]-MoveTypeZombie, FinalGameState-[POF,PGF,PZF]-FinalGreenSkull).
+    play_again_zombies(NewZombieGameState-[PO3,PG3,PZ3]-NewerGreenSkull, ListEatZombie, Player-[RowZombie, ColumnZombie]-MoveTypeZombie, FinalGameState-[POF,PGF,PZF]-NewestGreenSkull),
+    change_green_skull(MoveTypeZombie, Player, NewestGreenSkull, FinalGreenSkull).
 
 
 
