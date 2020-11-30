@@ -244,3 +244,13 @@ initial_green_skull(g).
 % green_skull(GreenSkull, NewGreenSkull)
 green_skull(o, g).
 green_skull(g, o).
+
+% Changes who has the Green Skull based on the type of move (e - eating, a - adjacent) 
+% and on who was already with the Green Skull (if it was the Player or not)
+change_green_skull(e, Player, GreenSkull, NewGreenSkull) :-
+    Player == GreenSkull,
+    green_skull(GreenSkull, NewGreenSkull).
+change_green_skull(e, _, GreenSkull, NewGreenSkull) :-
+    NewGreenSkull = GreenSkull.
+change_green_skull(a, _, GreenSkull, NewGreenSkull) :-
+    NewGreenSkull = GreenSkull.
