@@ -1,3 +1,5 @@
+:-use_module(library(random)).
+
 pc_pc:-
     initial(GameState-Player-GreenSkull),
     write('                   Choose Orcs level:     '),nl,
@@ -35,5 +37,78 @@ next(Player,GameState-[PO1,PG1,PZ1],GreenSkull,LevelO,LevelG):-
     set_next_player(Player, NextPlayer),
     play_game(GameState-[PO1,PG1,PZ1], NextPlayer, GreenSkull,LevelO-LevelG).
 
-choose_move(GameState,Player,Level,Move):-
-    
+%using random:
+choose_move(GameState,Player,1,Move):-
+    find_piece(GameState,Player,RowPiece-ColumnPiece),
+    find_move(GameState,RowPiece-ColumnPiece,Row-Column),
+    Move=RowPiece-ColumnPiece-Row-Column.
+
+find_piece(GameState,Player,RowPiece-ColumnPiece):-
+    %repeat?
+    %encontrar lista onde estão as peças ou as peças disponiveis para usar
+    valid_pieces(GameState,Player,List),
+    length(List,N),
+    %fazer random para fazer escolher peça a mover
+    random_between(1,N,R),
+    nth1(R,List,Piece),
+    Piece=[RowPiece,ColumnPiece],
+    valid_piece(GameState,Player,RowPiece,ColumnPiece),!.
+
+%Return all coordenates of Player
+valid_pieces(GameState,Player,List):-
+    find_pieces(GameState,Player,1,List).
+
+%muda as linhas
+find_pieces(GameState,Player,NRow,[L1|R]):-
+    NRow=<10,
+    nth1(NRow,GameState,Row),
+    member(Player,Row),
+    getCoordenates(Row,NRow-1,Player,L1),
+    NewNRow is NRow+1,
+    find_pieces(GameState,Player,NewNRow,R).
+
+find_pieces(_,_,11,[]).
+
+find_pieces(_,_,NRow,[_|R]):- 
+    NewNRow is NRow+1,
+    find_pieces(GameState,Player,NewNRow,R)
+
+%muda as colunas
+getCoordenates(Row,NRow-NColumn,Player,[L1|R]):-
+    NColumn=<NRow,
+    nth1(NColumn,Row,Elem),
+    Elem==Player,
+    L1=[NRow,NColumn],
+    NewNColumn is NColumn+1,
+    getCoordenates(Row,NRow-NewNColumn,Player,R).
+
+getCoordenates(_,NRow-NColumn,_,L):-
+    NextNRow is NRow+1,
+    NColumn==NextNRow,
+    L=[].
+
+getCoordenates(Row,NRow-NColumn,Player,[_|R]):-
+    NewNColumn is NColumn+1,
+    getCoordenates(Row,NRow-NewNColumn,Player,R).
+
+
+find_move(GameState,RowPiece-ColumnPiece,Row-Column):-
+    %fazer random para fazer escolher para onde mover
+    valid_moves(GameState, _-RowPiece-ColumnPiece, ListAdjacentMoves-ListEatMoves),
+    random_between(1,2,RList),
+    choose_list(ListAdjacentMoves-ListEatMoves,RList,List),
+    length(List,N),
+    random_between(1,N,R),
+    nth1(R,List,Move),
+    Move=[Row,Column].
+
+choose_list(ListAdjacentMoves-_,1,ListAdjacentMoves).
+choose_list(_-ListEatMoves,2,ListEatMoves).
+
+
+
+
+
+%using greedy algorithm:
+choose_move(GameState,Player,2,Move):-
+    %https://www.cs.unm.edu/~luger/ai-final/code/PROLOG.best.html
