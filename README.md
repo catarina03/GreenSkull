@@ -45,10 +45,6 @@ ou
 
 Os zombies pontuam da mesma maneira. A espécie que tiver mais pontos ganha, mesmo que sejam os zombies!
 
-**Bibliografia**
-* [Página oficial do jogo](https://nestorgames.com/#greenskull_detail)
-* [Livro de regras](https://nestorgames.com/rulebooks/GREENSKULL_EN.pdf)
-
 ## **Representação interna do estado do jogo:**
 Escolhemos representar o estado do jogo através de um predicado composto por 3 elementos, GameState (que representa o estado atual do tabuleiro), Player (que reprenta o jogador que pode jogar naquela ronda) e GreenSkull (que representa o jogador que, naquele momento, tem a Green Skull em sua posse).  
 
@@ -90,10 +86,13 @@ Para a obtenção das jogadas  válidas usamos o predicado **valid_moves**, que 
 A execução das jogadas é feita atravé do predicado **move**. Aqui vemos todas as jogadas válidas que o jogador pode fazer com com a peça escolhida e verificamos se a jogada pretendida está contida nessa lista. Caso esteja, então mudamos o estado do tabuleiro (predicado **change_board**) assim como as pontuações de cada espécie (**change_score**).
  
 ## **Final do Jogo:** 
-Na passagem à próxima jogada através do predicado **next**, verificamos se chegamos ao fim do jogo através do predicado **game_over**,que só retornará ao next caso não tenhamos chegado ao fim. Para a verificação usamos o **is_over**, que percorre o GameState a fim de encontrar uma situação de final de jogo. Caso seja encontrado, prosseguirá para **final_scores**, que retorna as pontuação final do jogo, consoante o ultimo estado e seguidamente irá para o **get_winner** que retorna o vencedor consoante a pontuação final.
+Na passagem à próxima jogada através do predicado **next**, verificamos se chegamos ao fim do jogo através do predicado **game_over**,que só retornará ao next caso não tenhamos chegado ao fim. Para a verificação usamos o **is_over**, que percorre o GameState a fim de encontrar uma situação de final de jogo. Caso seja encontrado, prosseguirá para **final_scores**, que retorna as pontuação final do jogo, consoante o ultimo estado e seguidamente irá para o **get_winner** que retorna o vencedor consoante a pontuação final.  
+
+<img src="./images/game_over.png" alt="game_over code" /> 
+<img src="./images/is_over.png" alt="is_over coded"/> 
 
 ## **Jogada do Computador:**
-A jogada do computador é feita através do predicado **choose_move**, que recebe o GameState, Player e o nível de dificuldade e retorna o moviemento que vai fazer. O movimento é composto por: RowPiece-ColumnPiece-Row-Column. O predicado **find_piece** retorna a peça que vai ser movimentada (RowPiece,ColumnPiece) e **find_move** retorna para onde vai a peça. O nivel de dificuldade implementada foi o **facíl**, sendo a procura das linhas e colunas utilizadas por um **random**, verificando sempre se é valido ou não.
+A jogada do computador é feita através do predicado **choose_move**, que recebe o GameState, Player e o nível de dificuldade e retorna o moviemento que vai fazer. O movimento é composto por: RowPiece-ColumnPiece-Row-Column. O predicado **find_piece** retorna a peça que vai ser movimentada (RowPiece,ColumnPiece) e **find_move** retorna para onde vai a peça. O nivel de dificuldade implementada foi o **facíl**, sendo a procura das linhas e colunas utilizadas por um algoritmo **random**, verificando sempre se é valido ou não.
 
 ## **Conclusões:**
 O trabalho desenvolvido teve como objetivo a aprendizagem da liguagem Prolog e da programação lógica por trás de um jogo.
@@ -102,4 +101,6 @@ A nivel do desenvolvimento do trabalho poderão existir alguns problemas nas jog
 Para uma melhoria do jogo poderiamos ter implementado um algoritmo greedy para aumentar o nivel de dificuldade.
   
 ## **Bibliografia:**
+* [Página oficial do jogo](https://nestorgames.com/#greenskull_detail)
+* [Livro de regras](https://nestorgames.com/rulebooks/GREENSKULL_EN.pdf)
 * [Manual do Sicstus](https://sicstus.sics.se/sicstus/docs/latest4/pdf/sicstus.pdf)
