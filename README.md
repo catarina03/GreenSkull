@@ -86,8 +86,8 @@ A execução das jogadas é feita atravé do predicado **move**. Aqui vemos toda
 ## **Final do Jogo:** 
 Na passagem à próxima jogada através do predicado **next**, verificamos se chegamos ao fim do jogo através do predicado **game_over**,que só retornará ao next caso não tenhamos chegado ao fim. Para a verificação usamos o **is_over**, que percorre o GameState a fim de encontrar uma situação de final de jogo. Caso seja encontrado, prosseguirá para **final_scores**, que retorna as pontuação final do jogo, consoante o ultimo estado e seguidamente irá para o **get_winner** que retorna o vencedor consoante a pontuação final.  
 
-<img src="./images/game_over.png" alt="game_over code" /> 
-<img src="./images/is_over.png" alt="is_over coded"/>   
+<img src="./images/game_over.PNG" alt="game_over code" /> 
+<img src="./images/is_over.PNG" alt="is_over coded"/>   
 
 
 ## **Jogada do Computador:**
