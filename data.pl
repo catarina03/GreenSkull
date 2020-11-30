@@ -1,3 +1,4 @@
+% ------------------- Player Information ---------------------
 % z -> Zombies -> verdes
 % g -> Globin -> roxos
 % o -> Orc -> brancos
@@ -8,7 +9,17 @@ player(o).
 player(g).
 player(z).
 
+% Replaces symbols with characters for easier display
+code(e,'   ').
+code(z,' Z ').
+code(g,' G ').
+code(o,' O ').
+
+
+
+% ---------------------------- Builds the board ------------------------------
 % Replaces number with string with spaces and row number.
+
 space(0,'                      1 |     ').
 space(1,'                    2 |     ').
 space(2,'                  3 |     ').
@@ -34,13 +45,8 @@ hex_code(9,'       /     / \\ / \\ / \\ / \\ / \\ / \\ / \\ / \\ / \\ / \\     \
 hex_code(10,'     /       \\ / \\ / \\ / \\ / \\ / \\ / \\ / \\ / \\ / \\ /       \\').
 
 
-% Replaces symbols with characters for easier display
-code(e,'   ').
-code(z,' Z ').
-code(g,' G ').
-code(o,' O ').
 
-
+% ------------------------- Board Data -------------------------------
 % Inits the board
 initial_board([       
              [e],         
@@ -54,7 +60,7 @@ initial_board([
      [g,g,g,e,e,e,o,o,o],   
     [g,g,g,g,e,e,o,o,o,o] ]).
 
-
+% Example of final game state
 final_board([       
              [e],         
             [e,e],         
@@ -66,4 +72,3 @@ final_board([
       [o,e,e,e,e,e,e,g],        
      [o,e,e,e,e,e,e,e,e],   
     [o,z,z,z,e,e,e,e,e,e] ]).
-

@@ -1,11 +1,8 @@
 :-include('data.pl').
 
-% z -> Zombies -> verdes
-% g -> Globin -> roxos
-% o -> Orc -> brancos
-% 0 -> Empty space
 
 
+% ---------------------------- Display Game -------------------------------
 % Display current state of the game
 % GameState - current state of the board
 % Player - who plays this turn
@@ -20,6 +17,9 @@ display_game(GameState-GreenSkull, Player) :-
     nl, nl.
 
 
+
+% ---------------------------- Display Board -----------------------------
+% Displays current board
 display_board(GameState) :-
     nl,nl,print_board(GameState,0),
     hex_code(10,C),write(C),nl,nl,
@@ -27,6 +27,36 @@ display_board(GameState) :-
     display_column_numbers,
     nl, nl.
 
+
+% Auxiliar function that helps display_board printing the full board
+print_board([],_).
+print_board([H|T],N) :- 
+    hex_code(N,C),write(C),nl,
+    space(N,S),write(S),
+    write('|'), print_row(H), write('     | '),
+    N1 is N+1,
+    nl,
+    print_board(T,N1).
+
+
+% Auxiliar function that prints a single row
+print_row([]).
+print_row([H|T]):-
+    code(H,P),   
+    write(P),
+    write('|'),
+    print_row(T).
+
+
+% Auxiliar function that prints column numbers
+display_column_numbers:-
+    write('        - - - - - - - - - - - - - - - - - - - - - - - -   '), nl, nl,
+    write('       1   2   3   4   5   6   7   8   9   10'),
+    nl.
+
+
+
+% ---------------------------- Displays Round Data -------------------------
 % Display who plays this round
 display_player_turn(o):- 
     nl, write('                     TURN TO PLAY, ORCS!').
@@ -41,36 +71,10 @@ display_green_skull(o) :-
 display_green_skull(g) :-
     nl, write('                 GOBLINS HAVE THE GREEN SKULL!').
 
-% Prints the full board
-print_board([],_).
-print_board([H|T],N) :- 
-    hex_code(N,C),write(C),nl,
-    space(N,S),write(S),
-    write('|'), print_row(H), write('     | '),
-    N1 is N+1,
-    nl,
-    print_board(T,N1).
 
-% Prints a single row
-print_row([]).
-print_row([H|T]):-
-    code(H,P),   
-    write(P),
-    write('|'),
-    print_row(T).
 
-% Prints column numbers
-display_column_numbers:-
-    write('        - - - - - - - - - - - - - - - - - - - - - - - -   '), nl, nl,
-    write('       1   2   3   4   5   6   7   8   9   10'),
-    nl.
-    
-% Displays game over message
-display_game_over :- 
-    nl, 
-    write('                        G A M E  O V E R'),nl,nl.
-
-%Display game menus:
+% ---------------------------- Displays Menus --------------------------------    
+% Displays main Green Skull menu
 display_menu(C):-
     write('                  |   G R E E N  S K U L L  |'),nl,
     write('               ---------------------------------'),nl,
@@ -80,6 +84,7 @@ display_menu(C):-
     write('                  |                         |'),nl,
     write('               Option: '),read(C),nl,nl.
 
+% Displays instructions menu
 display_instructions:-
     write('                  | I N S T R U C T I O N S |'),nl,
     write('               ---------------------------------'),nl,
@@ -94,6 +99,7 @@ display_instructions:-
     write('               ---------------------------------'),nl,
     write('                  |                         |'),nl,nl,nl.
 
+% Displays game mode
 display_play(C):-
     write('                  |         P L A Y         |'),nl,
     write('               ---------------------------------'),nl,
@@ -105,6 +111,7 @@ display_play(C):-
     write('                  |                         |'),nl,nl,
     write('                Option: '),read(C),nl,nl.
 
+% Displays game header
 display_play_mode(1):-
     write('                   H U M A N   VS   H U M A N   '),nl,
     write('               ---------------------------------'),nl,nl.
@@ -120,7 +127,15 @@ display_play_mode(3):-
 display_play_mode(4):-
     write('                         P C   VS   P C         '),nl,
     write('               ---------------------------------'),nl,nl.
-        
+       
+
+
+% -------------------------------- Scores Menu ---------------------------------
+% O - Orcs' score
+% G - Goblins' score
+% Z - Zombies' score
+
+% Displays score information
 display_scores(O-G-Z):-
     nl,nl,
     write('                          S C O R E S       '),nl,
@@ -131,6 +146,7 @@ display_scores(O-G-Z):-
     write('               ---------------------------------'),nl,
     nl,nl.
 
+% Displays final score information
 display_final_scores(O-G-Z):-
     write('                     F I N A L  S C O R E S     '),nl,
     write('               ---------------------------------'),nl,
@@ -140,6 +156,9 @@ display_final_scores(O-G-Z):-
     write('               ---------------------------------'),nl.
    
 
+
+% ---------------------------- Winner Information -----------------------------
+% Displays winner
 display_winner(o):-
     write('                     W I N N E R:  O R C S     '),nl,
     nl,nl,nl.
@@ -152,10 +171,12 @@ display_winner(z):-
     write('                   W I N N E R:  Z O M B I E S     '),nl,
     nl,nl,nl.
 
+% Displays tie between all 3 species
 display_winner(t):-
     write('                       A L L  W I N N E R S     '),nl,
     nl,nl,nl.
 
+% Displays tie between 2 species
 display_winner(o-g):-
     write('            W I N N E R:  O R C S  &  G O B L I N S     '),nl,
     nl,nl,nl.
@@ -164,8 +185,14 @@ display_winner(o-z):-
     write('            W I N N E R:  O R C S  &  Z O M B I E S     '),nl,
     nl,nl,nl.
 
-
 display_winner(g-z):-
     write('          W I N N E R:  G O B L I N S  &  Z O M B I E S     '),nl,
     nl,nl,nl.
 
+
+
+% ---------------------------- Display Game Over -----------------------------------
+% Displays game over message
+display_game_over :- 
+    nl, 
+    write('                        G A M E  O V E R'),nl,nl.

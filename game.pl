@@ -60,7 +60,7 @@ initial(GameState-Player-GreenSkull) :-
 %   - Player chooses the piece they want to move
 %   - Piece moves
 %   - Sees if it can go to next round
-% [PO,PG,PZ] - Punctuation list
+% [PO,PG,PZ] - Score list
 play_round(GameState-[PO,PG,PZ], Player, GreenSkull):- 
     display_game(GameState-GreenSkull,Player),
     choose_piece(GameState,Player,RowPiece,ColumnPiece),
@@ -73,7 +73,7 @@ play_round(GameState-[PO,PG,PZ], Player, GreenSkull):-
 %   - Displays current scores
 %   - Sets the player for the next round
 %   - Starts next round
-% [PO1,PG1,PZ1] - Punctuation list
+% [PO1,PG1,PZ1] - Score list
 next(Player,GameState-[PO1,PG1,PZ1],GreenSkull):-
     \+ game_over(GameState-[PO1,PG1,PZ1], _),!,
     display_scores(PO1-PG1-PZ1),
@@ -84,7 +84,7 @@ next(Player,GameState-[PO1,PG1,PZ1],GreenSkull):-
 
 % ---------------------------------- Game Over ---------------------------------------------
 % Checks if game is over, if so displays the end layout with the final scores and the winner
-% [PO,PG,PZ] - Punctuation list
+% [PO,PG,PZ] - Score list
 % Winner - Player that has the biggest score
 game_over(GameState-[PO,PG,PZ],Winner):-
     is_over(GameState),!,
