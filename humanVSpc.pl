@@ -9,31 +9,26 @@ human_pc:-
 %Turn: Orcs==HUMAN
 play_human_pc_game(GameState-[PO,PG,PZ],o,GreenSkull,LevelG):-
     display_game(GameState-GreenSkull,o),
+    trace,
     choose_piece(GameState,o,RowPiece,ColumnPiece),
-    move_human_piece(GameState-[PO,PG,PZ]-o,RowPiece-ColumnPiece,NewGameState-[PO1,PG1,PZ1]),
-    nextHP(o,NewGameState-[PO1,PG1,PZ1],GreenSkull,LevelG).
+    move_human_piece(GameState-[PO,PG,PZ]-o-GreenSkull, RowPiece-ColumnPiece, NewGameState-[PO1,PG1,PZ1]-FinalGreenSkull),
+    nextHP(o,NewGameState-[PO1,PG1,PZ1],FinalGreenSkull,LevelG).
     
-
-%Turn: Zombies -> Orcs have the GreenSkull
-play_human_pc_game(GameState-[PO,PG,PZ],z,o,LevelG):-
-    display_game(GameState-o,z),
-    choose_piece(GameState,z,RowPiece,ColumnPiece),
-    move_human_piece(GameState-[PO,PG,PZ]-z,RowPiece-ColumnPiece,NewGameState-[PO1,PG1,PZ1]),
-    nextHP(z,NewGameState-[PO1,PG1,PZ1],o,LevelG).
 
 %Turn: Goblins==PC
 play_human_pc_game(GameState-[PO,PG,PZ],g,GreenSkull,LevelG):-
     display_game(GameState-GreenSkull,g),
-    choose_move(GameState, g,LevelG,Move),
-    move(GameState-[PO,PG,PZ]-g,Move, NewGameState-[PO1,PG1,PZ1]-ListEat),   
-    nextHP(g,NewGameState-[PO1,PG1,PZ1],GreenSkull,LevelG).
+    choose_move(GameState, g,LevelG, RowPiece-ColumnPiece-Row-Column),
+    move(GameState-[PO,PG,PZ]-g-GreenSkull, RowPiece-ColumnPiece-Row-Column-MoveType, NewGameState-[PO1,PG1,PZ1]-ListEat-NewGreenSkull),   
+    nl, write('Player: '), write(g), nl,
+    write('Start position - End position: ['), write(RowPiece-ColumnPiece-Row-Column), write(']'), nl,
 
-%Turn: Zombies -> Goblins have the GreenSkull
-play_human_pc_game(GameState-[PO,PG,PZ],z,g,LevelG):-
-    display_game(GameState-g,z),
-    choose_move(GameState, z,LevelG,Move),
-    move(GameState-[PO,PG,PZ]-z,Move, NewGameState-[PO1,PG1,PZ1]-ListEat),
-    nextHP(z,NewGameState-[PO1,PG1,PZ1],g,LevelG).
+    play_again_bot(NewGameState-[PO1,PG1,PZ1], ListEat, g-[Row, Column]-MoveType, NewerGameState-[PO2,PG2,PZ2]),
+    play_zombies_bot(LevelG, NewerGameState-[PO2,PG2,PZ2]-g-NewGreenSkull, _-_-RowZombie-ColumnZombie-MoveTypeZombie, NewZombieGameState-[PO3,PG3,PZ3]-ListEatZombie-NewerGreenSkull),
+    play_again_zombies(NewZombieGameState-[PO3,PG3,PZ3]-NewerGreenSkull, ListEatZombie, g-[RowZombie, ColumnZombie]-MoveTypeZombie, FinalGameState-[POF,PGF,PZF]-NewestGreenSkull),
+    sleep(5),
+    nextHP(g,FinalGameState-[POF,PGF,PZF],NewestGreenSkull,LevelG).
+
 
 %função com argumento extra.
 nextHP(Player,GameState-[PO1,PG1,PZ1],GreenSkull,Level):-
