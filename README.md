@@ -4,8 +4,13 @@
 * **Grupo**: Green Skull 4
 * **Turma prática**: 6
 * **Elementos**: 
-    - Catarina Justo dos Santos Fernandes (up201806610)
-    - Jéssica Mireie Fernandes Nascimento (up201806723)
+    - [Catarina Justo dos Santos Fernandes](https://github.com/catarina03) (up201806610)
+    - [Jéssica Mireie Fernandes Nascimento](https://github.com/jessymireie) (up201806723)
+    
+## **Classificação:**
+* **Relatório intermédio:** 15.3
+* **Entrega:** 15.9
+* **Final:** 15.8
 
 ## **Instalação e Execução:**
  Para iniciar o jogo, será necessário iniciar o sicstus e fazer consult('game.pl').
